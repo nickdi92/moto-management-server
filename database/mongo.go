@@ -4,15 +4,20 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
+	"moto-management-server/errors"
+	"os"
 )
 
-func NewMongoClient() {
+func NewMongoClient() error {
+
 	// Connect to MongoDB
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI(os.Getenv("MONGODB_URI"))
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
-		log.Fatal("Failed to connect to MongoDB: ", err)
+		return errors.MongoErrors{
+			Code:    errors.MongoErrorCode_FailedToConnect,
+			Message: err.Error(),
+		}
 	}
 
 	defer client.Disconnect(context.Background())
@@ -20,8 +25,10 @@ func NewMongoClient() {
 	// Check if MongoDB connection was successful
 	err = client.Ping(context.Background(), nil)
 	if err != nil {
-		log.Fatal("Failed to ping MongoDB server: ", err)
-	} else {
-		log.Println("Connected to MongoDB!")
+		return errors.MongoErrors{
+			Code:    errors.MongoErrorCode_FailedToPing,
+			Message: err.Error(),
+		}
 	}
+	return nil
 }

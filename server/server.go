@@ -1,7 +1,8 @@
 package server
 
 import (
-	"log"
+	"fmt"
+	"moto-management-server/utils"
 	"net/http"
 )
 
@@ -10,17 +11,16 @@ func NewMotoManagementServer() (*MotoManagementServer, error) {
 		Addr: ":8080",
 	}
 
-	err := server.RegisterRoutes()
+	server.RegisterRoutes()
+
+	err := server.HandleRoutes()
 	if err != nil {
 		return nil, err
 	}
 
-	err = server.HandleRoutes()
-	if err != nil {
-		return nil, err
-	}
+	utils.SuccessOutput("Webserver started")
+	utils.InfoOutput(fmt.Sprintf("Listening on localhost%s", server.Addr))
 
-	log.Fatal(http.ListenAndServe(server.Addr, nil))
-
-	return server, nil
+	err = http.ListenAndServe(server.Addr, nil)
+	return server, err
 }

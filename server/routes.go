@@ -9,7 +9,7 @@ import (
 
 const webPrefix = "web"
 
-func (s *MotoManagementServer) RegisterRoutes() error {
+func (s *MotoManagementServer) RegisterRoutes() {
 	s.routes = make(Routes)
 
 	// Add manual routes
@@ -18,22 +18,21 @@ func (s *MotoManagementServer) RegisterRoutes() error {
 	privateRoutes["login"] = routes.LoginRoute
 
 	/*-------------------------------------------------*/
-	for url, routeHandler := range s.routes {
+	for url, routeHandler := range privateRoutes {
 		// Building url like /web/auth, /web/login
 		routeUrl := fmt.Sprintf("/%s/%s", webPrefix, url)
 		s.routes[routeUrl] = routeHandler
 	}
-
-	return nil
 }
 
 func (s *MotoManagementServer) HandleRoutes() error {
-	if s.routes == nil {
-		return errors.RouteErrors{
+	if s.routes == nil || len(s.routes) == 0 {
+		return errors.RouteError{
 			Code:    errors.RouteErrorCode_NoRoutesRegistered,
 			Message: "No routes registered",
 		}
 	}
+
 	for url, route := range s.routes {
 		http.HandleFunc(url, route)
 	}
