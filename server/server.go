@@ -2,13 +2,18 @@ package server
 
 import (
 	"fmt"
+	"moto-management-server/business_logic"
 	"moto-management-server/utils"
 	"net/http"
 )
 
-func NewMotoManagementServer() (*MotoManagementServer, error) {
+func (s *MotoManagementServer) NewMotoManagementServer() (*MotoManagementServer, error) {
+	bl := business_logic.BusinessLogic{}
+	bl.NewBusinessLogic()
+
 	server := &MotoManagementServer{
-		Addr: ":8080",
+		Addr:          ":8080",
+		businessLogic: bl,
 	}
 
 	server.RegisterRoutes()

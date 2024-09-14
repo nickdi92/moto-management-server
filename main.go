@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"log"
-	"moto-management-server/database"
 	server2 "moto-management-server/server"
 	"moto-management-server/utils"
 	"os"
@@ -23,20 +22,14 @@ func main() {
 
 	utils.SuccessOutput("File .env loaded successfully !")
 
-	/***********************************
-				MONGO
-	***********************************/
-	mongoErr := database.NewMongoClient()
-	if mongoErr != nil {
-		utils.ErrorOutput(mongoErr.Error())
-		os.Exit(1)
-	}
-	utils.SuccessOutput("Connected to MongoDB !")
+	//businessLogic := business_logic.BusinessLogic{}
+	//businessLogic.NewBusinessLogic()
 
 	/***********************************
 				WEBSERVER
 	***********************************/
-	_, serverError := server2.NewMotoManagementServer()
+	motoServer := server2.MotoManagementServer{}
+	_, serverError := motoServer.NewMotoManagementServer()
 	if serverError != nil {
 		utils.ErrorOutput(fmt.Sprintf("error is: %v", err))
 		os.Exit(1)

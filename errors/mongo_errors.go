@@ -7,6 +7,10 @@ type MongoErrorCode string
 const MongoErrorCode_FailedToConnect = "FailedToConnect"
 const MongoErrorCode_FailedToDisconnect = "FailedToDisconnect"
 const MongoErrorCode_FailedToPing = "FailedToPing"
+const MongoErrorCode_CreateCollectionError = "ErrorOnCreateCollection"
+const MongoErrorCode_CreateIndexError = "ErrorOnCreateIndex"
+const MongoErrorCode_ErrorOnSearchingIntoDatabase = "ErrorOnSearchingIntoDatabase"
+const MongoErrorCode_NoDocumentsFound = "ErrorNoDocumentsFound"
 
 type MongoErrors struct {
 	Code    MongoErrorCode

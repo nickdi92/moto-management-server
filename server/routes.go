@@ -15,7 +15,7 @@ func (s *MotoManagementServer) RegisterRoutes() {
 	// Add manual routes
 	privateRoutes := make(Routes)
 	privateRoutes["auth"] = routes.AuthRoute
-	privateRoutes["login"] = routes.LoginRoute
+	//privateRoutes["login"] = routes.LoginRoute
 
 	/*-------------------------------------------------*/
 	for url, routeHandler := range privateRoutes {
@@ -33,8 +33,8 @@ func (s *MotoManagementServer) HandleRoutes() error {
 		}
 	}
 
-	for url, route := range s.routes {
-		http.HandleFunc(url, route)
+	for url, routeHandler := range s.routes {
+		http.HandleFunc(url, routeHandler)
 	}
 	return nil
 }
