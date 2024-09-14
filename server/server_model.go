@@ -6,7 +6,6 @@ import (
 )
 
 type Route func(writer http.ResponseWriter, request *http.Request)
-type RouteHandler func(b business_logic.BusinessLogic, url string, route Route)
 type Routes map[string]Route
 
 type MotoManagementServer struct {
