@@ -11,8 +11,7 @@ import (
 )
 
 type MotoManagementMongoClient struct {
-	mongoClient      *mongo.Client
-	usersCollections *mongo.Collection
+	mongoClient *mongo.Client
 }
 
 type MotoManagementMongoClientInterface interface {
@@ -50,7 +49,9 @@ func (m *MotoManagementMongoClient) NewMongoClient() (*MotoManagementMongoClient
 		}
 	}
 
-	usersCollections := client.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_USERS_COLLECTIONS"))
+	usersCollections := client.
+		Database(os.Getenv("MONGODB_DATABASE")).
+		Collection(os.Getenv("MONGODB_USERS_COLLECTIONS"))
 
 	/** Create Collections indexes */
 	usersIndexes := make([]mongo.IndexModel, 0)
@@ -94,7 +95,6 @@ func (m *MotoManagementMongoClient) NewMongoClient() (*MotoManagementMongoClient
 	/******* end ******/
 
 	return &MotoManagementMongoClient{
-		mongoClient:      client,
-		usersCollections: usersCollections,
+		mongoClient: client,
 	}, nil
 }

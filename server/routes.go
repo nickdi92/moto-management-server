@@ -1,9 +1,9 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"moto-management-server/errors"
-	"moto-management-server/server/routes"
 	"net/http"
 )
 
@@ -14,7 +14,7 @@ func (s *MotoManagementServer) RegisterRoutes() {
 
 	// Add manual routes
 	privateRoutes := make(Routes)
-	privateRoutes["auth"] = routes.AuthRoute
+	privateRoutes["auth"] = AuthRoute
 	//privateRoutes["login"] = routes.LoginRoute
 
 	/*-------------------------------------------------*/
@@ -34,7 +34,19 @@ func (s *MotoManagementServer) HandleRoutes() error {
 	}
 
 	for url, routeHandler := range s.routes {
-		http.HandleFunc(url, routeHandler)
+		http.HandleFunc(url, func(writer http.ResponseWriter, request *http.Request) {
+			routeHandler(s, writer, request)
+		})
 	}
 	return nil
+}
+
+func (s *MotoManagementServer) HandleRouteError(writer http.ResponseWriter, err interface{}) {
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(err)
+}
+
+func (s *MotoManagementServer) HandleResponse(writer http.ResponseWriter, result interface{}) {
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(result)
 }
