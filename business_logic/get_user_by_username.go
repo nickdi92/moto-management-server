@@ -2,7 +2,6 @@ package business_logic
 
 import (
 	"errors"
-	"fmt"
 )
 
 func (b *BusinessLogic) GetUserByUsername(username string) (User, error) {
@@ -10,10 +9,8 @@ func (b *BusinessLogic) GetUserByUsername(username string) (User, error) {
 	if username == "" {
 		return user, errors.New("No username provided") //@TODO improve errors
 	}
-	if b.mongoClient == nil {
-		fmt.Println("sei un cannibale")
-	}
-	_, mongoFindErr := b.mongoClient.GetUserByUsername(username)
+	mongo, _ := b.mongoClient.NewMongoClient()
+	_, mongoFindErr := mongo.GetUserByUsername(username)
 
 	if mongoFindErr != nil {
 		return user, errors.New(mongoFindErr.Error())

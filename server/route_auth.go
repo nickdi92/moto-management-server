@@ -27,9 +27,11 @@ var AuthRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reques
 		err := map[string]interface{}{"validationErr": validationErr}
 		s.HandleRouteError(writer, err)
 	} else {
+		s.businessLogic.NewBusinessLogic()
 		findUser, findUserErr := s.businessLogic.GetUserByUsername(username)
 		if findUserErr != nil {
-			err := map[string]interface{}{"findUserErr": findUserErr}
+
+			err := map[string]interface{}{"findUserErr": findUserErr.Error()}
 			s.HandleRouteError(writer, err)
 		} else {
 			s.HandleResponse(writer, findUser)

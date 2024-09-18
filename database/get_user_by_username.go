@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"moto-management-server/errors"
@@ -13,12 +12,6 @@ import (
 func (m *MotoManagementMongoClient) GetUserByUsername(username string) (User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-
-	if m == nil {
-		fmt.Println("CANDISCO")
-	} else {
-		fmt.Println("ZIOMANESKIN")
-	}
 
 	var user User
 	usersCollections := m.mongoClient.
