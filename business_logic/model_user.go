@@ -1,6 +1,8 @@
 package business_logic
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID        string    `json:"id"`

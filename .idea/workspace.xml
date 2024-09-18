@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f386c12-fe86-471c-9a30-bc7c6d96ba0a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/server/request_validator.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/route_register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e05e8aa9-383f-4564-9023-8f297e0d6d51.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e05e8aa9-383f-4564-9023-8f297e0d6d51.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/business_logic/model_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/business_logic/model_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/route_login.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/route_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/route_auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/routes.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/server_model.go" afterDir="false" />
     </list>
@@ -31,9 +41,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2m3AdtKTeh8ALRUtfmoPlZSLfA5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -45,11 +55,12 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/nicolodian/Projects/moto-management/moto-management-server/database",
+    "last_opened_file_path": "//wsl.localhost/Ubuntu/home/nickdi/Projects/snippet/moto-management-server/server",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -60,6 +71,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="\\wsl.localhost\Ubuntu\home\nickdi\Projects\snippet\moto-management-server\server" />
       <recent name="$PROJECT_DIR$/database" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -108,12 +120,24 @@
       <option name="presentableId" value="Default" />
       <updated>1726294978246</updated>
       <workItem from="1726294979300" duration="12225000" />
-      <workItem from="1726669603337" duration="744000" />
+      <workItem from="1726669603337" duration="899000" />
+      <workItem from="1726670984651" duration="3421000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="GitHub.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

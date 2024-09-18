@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/thedevsaddam/govalidator"
 	"moto-management-server/business_logic"
 	"net/http"
 )
@@ -18,4 +19,8 @@ type MotoManagementServerInterface interface {
 	NewMotoManagementServer() (*MotoManagementServer, error)
 	RegisterRoutes()
 	HandleRoutes() error
+
+	// Validate request methods
+	ValidateRequest(request *http.Request, rules govalidator.MapData) error
+	ValidateJwtToken(incomingJwtToken string, savedJwtToken string) error
 }

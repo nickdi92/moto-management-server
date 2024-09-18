@@ -1,1 +1,9 @@
 .idea/
+/.idea/dataSources/
+/.idea/dataSources.local.xml
+/.idea/dataSources.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/moto-management-server.iml
+/.idea/vcs.xml
+/.idea/workspace.xml

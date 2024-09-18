@@ -2,7 +2,7 @@ package server
 
 import (
 	"fmt"
-	"log"
+	"github.com/fatih/color"
 	"moto-management-server/business_logic"
 	"moto-management-server/utils"
 	"net/http"
@@ -31,7 +31,10 @@ func (s *MotoManagementServer) NewMotoManagementServer() (*MotoManagementServer,
 
 func logRequest(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
+		white := color.New(color.FgWhite)
+		infoStr := white.Add(color.BgHiMagenta)
+
+		_, _ = infoStr.Println(fmt.Sprintf("%s %s %s", r.RemoteAddr, r.Method, r.URL))
 		handler.ServeHTTP(w, r)
 	})
 }
