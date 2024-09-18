@@ -2,11 +2,12 @@ package database
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"moto-management-server/errors"
 	"os"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (m *MotoManagementMongoClient) GetUserByUsername(username string) (User, error) {
@@ -25,6 +26,7 @@ func (m *MotoManagementMongoClient) GetUserByUsername(username string) (User, er
 			Message: "No users found",
 		}
 	}
+
 	findErr := sr.Decode(&user)
 	if findErr != nil {
 		if findErr == mongo.ErrNoDocuments {

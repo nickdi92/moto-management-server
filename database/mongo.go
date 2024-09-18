@@ -2,12 +2,13 @@ package database
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"moto-management-server/errors"
 	"os"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type MotoManagementMongoClient struct {
@@ -33,12 +34,6 @@ func (m *MotoManagementMongoClient) NewMongoClient() (*MotoManagementMongoClient
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
 
 	// Check if MongoDB connection was successful
 	err = client.Ping(ctx, nil)

@@ -9,8 +9,8 @@ func (b *BusinessLogic) GetUserByUsername(username string) (User, error) {
 	if username == "" {
 		return user, errors.New("No username provided") //@TODO improve errors
 	}
-	mongo, _ := b.mongoClient.NewMongoClient()
-	_, mongoFindErr := mongo.GetUserByUsername(username)
+	// mongo, _ := b.mongoClient.NewMongoClient() @TODO This is wrong
+	_, mongoFindErr := b.mongoClient.GetUserByUsername(username)
 
 	if mongoFindErr != nil {
 		return user, errors.New(mongoFindErr.Error())

@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
-	"github.com/thedevsaddam/govalidator"
 	"moto-management-server/utils"
 	"net/http"
+
+	"github.com/thedevsaddam/govalidator"
 )
 
 var AuthRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
@@ -27,7 +28,7 @@ var AuthRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reques
 		err := map[string]interface{}{"validationErr": validationErr}
 		s.HandleRouteError(writer, err)
 	} else {
-		s.businessLogic.NewBusinessLogic()
+		// s.businessLogic.NewBusinessLogic() // @TODO This is wrong
 		findUser, findUserErr := s.businessLogic.GetUserByUsername(username)
 		if findUserErr != nil {
 
