@@ -20,6 +20,7 @@ type MotoManagementMongoClientInterface interface {
 
 	GetUserByUsername(username string) (User, error)
 	CreateNewUser(userToCreate User) (User, error)
+	UpdateUser(userToUpdate User) (User, error)
 }
 
 func (m *MotoManagementMongoClient) NewMongoClient() (*MotoManagementMongoClient, error) {

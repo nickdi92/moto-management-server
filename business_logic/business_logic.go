@@ -11,6 +11,7 @@ type BusinessLogicInterface interface {
 
 	GetUserByUsername(username string) (User, error)
 	CreateNewUser(user User) (User, error)
+	UpdateUser(user User) (User, error)
 }
 
 func (b *BusinessLogic) NewBusinessLogic() *BusinessLogic {

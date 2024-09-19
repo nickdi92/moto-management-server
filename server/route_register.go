@@ -50,12 +50,13 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	}
 
 	newUser := business_logic.User{
-		Username: username,
-		Password: password,
-		Name:     request.PostFormValue("name"),
-		Lastname: request.PostFormValue("lastname"),
-		Token:    token.Token,
-		ExpireAt: token.ExpiresAt,
+		Username:   username,
+		Password:   password,
+		Name:       request.PostFormValue("name"),
+		Lastname:   request.PostFormValue("lastname"),
+		Token:      token.Token,
+		ExpireAt:   token.ExpiresAt,
+		IsLoggedIn: false,
 	}
 
 	userCreated, userCreatedErr := s.businessLogic.CreateNewUser(newUser)

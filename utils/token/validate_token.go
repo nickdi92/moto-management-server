@@ -22,8 +22,9 @@ func (t *Token) ValidateToken() error {
 		return fmt.Errorf("invalid token")
 	}
 
+	exp, _ := token.Claims.GetExpirationTime()
 	now := time.Now()
-	if now.Equal(*t.ExpiresAt) {
+	if now.Equal(exp.Time) {
 		return errors.New("token is expired")
 	}
 

@@ -17,4 +17,5 @@ type User struct {
 	Motorcycle []Motorcycle       `bson:"motorcycles"`
 	CreatedAt  time.Time          `bson:"created_at"`
 	UpdatedAt  time.Time          `bson:"updated_at"`
+	IsLoggedIn bool               `bson:"is_logged_in"`
 }
