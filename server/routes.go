@@ -7,27 +7,26 @@ import (
 	"net/http"
 )
 
-const webPrefix = "web"
+const adminPrefix = "admin"
 
 func (s *MotoManagementServer) RegisterRoutes() {
 	s.routes = make(Routes)
 
 	// Add manual routes
 	privateRoutes := make(Routes)
-	privateRoutes["auth"] = AuthRoute
 	privateRoutes["register"] = RegisterRoute
 	privateRoutes["login"] = LoginRoute
 
 	/*-------------------------------------------------*/
 	for url, routeHandler := range privateRoutes {
 		// Building url like /web/auth, /web/login
-		routeUrl := fmt.Sprintf("/%s/%s", webPrefix, url)
+		routeUrl := fmt.Sprintf("/%s/%s", adminPrefix, url)
 		s.routes[routeUrl] = routeHandler
 	}
 }
 
 func (s *MotoManagementServer) HandleRoutes() error {
-	if s.routes == nil || len(s.routes) == 0 {
+	if s.routes == nil {
 		return errors.RouteError{
 			Code:    errors.RouteErrorCode_NoRoutesRegistered,
 			Message: "No routes registered",
@@ -50,5 +49,4 @@ func (s *MotoManagementServer) HandleRouteError(writer http.ResponseWriter, err 
 func (s *MotoManagementServer) HandleResponse(writer http.ResponseWriter, result interface{}) {
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(result)
-	return
 }

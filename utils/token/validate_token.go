@@ -1,9 +1,12 @@
 package token
 
 import (
+	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"os"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func (t *Token) ValidateToken() error {
@@ -17,6 +20,11 @@ func (t *Token) ValidateToken() error {
 
 	if !token.Valid {
 		return fmt.Errorf("invalid token")
+	}
+
+	now := time.Now()
+	if now.Equal(*t.ExpiresAt) {
+		return errors.New("token is expired")
 	}
 
 	return nil

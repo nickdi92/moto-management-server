@@ -17,7 +17,9 @@ type MotoManagementMongoClient struct {
 
 type MotoManagementMongoClientInterface interface {
 	NewMongoClient() (*MotoManagementMongoClient, error)
+
 	GetUserByUsername(username string) (User, error)
+	CreateNewUser(userToCreate User) (User, error)
 }
 
 func (m *MotoManagementMongoClient) NewMongoClient() (*MotoManagementMongoClient, error) {

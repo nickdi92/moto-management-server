@@ -8,7 +8,9 @@ import (
 
 type BusinessLogicInterface interface {
 	NewBusinessLogic() *BusinessLogic
+
 	GetUserByUsername(username string) (User, error)
+	CreateNewUser(user User) (User, error)
 }
 
 func (b *BusinessLogic) NewBusinessLogic() *BusinessLogic {

@@ -1,12 +1,13 @@
 package database
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct {
-	ID         primitive.ObjectID `bson:"id"`
+	ID         primitive.ObjectID `bson:"_id"`
 	Name       string             `bson:"name"`
 	Lastname   string             `bson:"lastname"`
 	Username   string             `bson:"username"`

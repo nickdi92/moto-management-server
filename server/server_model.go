@@ -1,10 +1,11 @@
 package server
 
 import (
-	"github.com/thedevsaddam/govalidator"
 	"moto-management-server/business_logic"
-	"moto-management-server/token"
+	"moto-management-server/utils/token"
 	"net/http"
+
+	"github.com/thedevsaddam/govalidator"
 )
 
 type Route func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request)
