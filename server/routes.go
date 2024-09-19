@@ -14,6 +14,7 @@ func (s *MotoManagementServer) RegisterRoutes() {
 
 	// Add manual routes
 	privateRoutes := make(Routes)
+	privateRoutes["auth"] = AuthRoute
 	privateRoutes["register"] = RegisterRoute
 	privateRoutes["login"] = LoginRoute
 
@@ -49,4 +50,5 @@ func (s *MotoManagementServer) HandleRouteError(writer http.ResponseWriter, err 
 func (s *MotoManagementServer) HandleResponse(writer http.ResponseWriter, result interface{}) {
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(result)
+	return
 }

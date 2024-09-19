@@ -10,6 +10,8 @@ require (
 )
 
 require (
+	github.com/go-crypt/crypt v0.3.0 // indirect
+	github.com/go-crypt/x v0.3.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
