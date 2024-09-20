@@ -38,6 +38,8 @@ var LoginRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 	}
 
 	user.IsLoggedIn = true
+	token.RefreshToken()
+	user.Token = token.Token
 	user, updateErr := s.businessLogic.UpdateUser(user)
 
 	if updateErr != nil {
