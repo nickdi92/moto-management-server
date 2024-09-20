@@ -17,12 +17,16 @@ func (m *MotoManagementMongoClient) UpdateUser(userToUpdate User) (User, error) 
 
 	uusersCollections := m.mongoClient.Database(os.Getenv("MONGODB_DATABASE")).Collection(os.Getenv("MONGODB_USERS_COLLECTIONS"))
 
-	// @todo Add all fields to update
 	filter := bson.D{{"_id", userToUpdate.ID}}
 	update := bson.D{{"$set", bson.D{
-		{
-			"is_logged_in", userToUpdate.IsLoggedIn,
-		},
+		{"name", userToUpdate.Name},
+		{"lastname", userToUpdate.Lastname},
+		{"password", userToUpdate.Password},
+		{"token", userToUpdate.Token},
+		{"expire_at", userToUpdate.ExpireAt},
+		{"motorcycles", userToUpdate.Motorcycle},
+		{"updated_at", userToUpdate.UpdatedAt},
+		{"is_logged_in", userToUpdate.IsLoggedIn},
 	}}}
 
 	_, err := uusersCollections.UpdateOne(ctx, filter, update)
