@@ -24,7 +24,7 @@ func (t *Token) ValidateToken() error {
 
 	exp, _ := token.Claims.GetExpirationTime()
 	now := time.Now()
-	if now.Equal(exp.Time) {
+	if now.Equal(exp.Time) || now.After(exp.Time) {
 		return errors.New("token is expired")
 	}
 
