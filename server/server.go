@@ -2,10 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/fatih/color"
 	"moto-management-server/business_logic"
 	"moto-management-server/utils"
 	"net/http"
+
+	"github.com/fatih/color"
 )
 
 func (s *MotoManagementServer) NewMotoManagementServer() (*MotoManagementServer, error) {
@@ -25,16 +26,20 @@ func (s *MotoManagementServer) NewMotoManagementServer() (*MotoManagementServer,
 	utils.SuccessOutput("Webserver started")
 	utils.InfoOutput(fmt.Sprintf("Listening on localhost%s", server.Addr))
 
-	err = http.ListenAndServe(server.Addr, logRequest(http.DefaultServeMux))
+	err = http.ListenAndServe(server.Addr, logRequest())
 	return server, err
 }
 
-func logRequest(handler http.Handler) http.Handler {
+func logRequest() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		resp := []byte(`{"status": "Go Server is working !!!"}`)
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Length", fmt.Sprint(len(resp)))
+		w.Write(resp)
 		white := color.New(color.FgWhite)
 		infoStr := white.Add(color.BgHiMagenta)
 
 		_, _ = infoStr.Println(fmt.Sprintf("%s %s %s", r.RemoteAddr, r.Method, r.URL))
-		handler.ServeHTTP(w, r)
+		//handler.ServeHTTP(w, r)
 	})
 }
