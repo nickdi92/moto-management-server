@@ -22,6 +22,7 @@ func (m *MotoManagementMongoClient) UpdateUser(userToUpdate User) (User, error) 
 		{"name", userToUpdate.Name},
 		{"lastname", userToUpdate.Lastname},
 		{"password", userToUpdate.Password},
+		{"email", userToUpdate.Email},
 		{"token", userToUpdate.Token},
 		{"expire_at", userToUpdate.ExpireAt},
 		{"motorcycles", userToUpdate.Motorcycle},

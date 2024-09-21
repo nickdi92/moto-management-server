@@ -10,6 +10,7 @@ type User struct {
 	Lastname   string     `json:"lastname"`
 	Username   string     `json:"username"`
 	Password   string     `json:"password"`
+	Email      string     `json:"email"`
 	Token      string     `json:"token"`
 	ExpireAt   *time.Time `json:"expire_at"`
 	CreatedAt  *time.Time `json:"created_at"`

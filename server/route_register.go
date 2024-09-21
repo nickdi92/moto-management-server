@@ -1,13 +1,13 @@
 package server
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
-	"moto-management-server/business_logic"
+	"io"
 	"moto-management-server/utils"
 	"net/http"
 
-	"github.com/thedevsaddam/govalidator"
+	"github.com/go-playground/validator/v10"
 )
 
 var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
@@ -17,30 +17,30 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	* 3. Create New user with new jwt token
 	 */
 
-	username := request.PostFormValue("username")
-	password, _ := utils.Password(request.PostFormValue("password")).Hash()
+	var registerUserRequest RegisterUserRequest
+	body, _ := io.ReadAll(request.Body)
+	_ = json.Unmarshal([]byte(body), &registerUserRequest)
 
-	rules := govalidator.MapData{
-		"username": []string{"required"},
-		"password": []string{"required"},
-	}
-	validErr := s.ValidateRequest(request, rules)
-	if validErr != nil {
-		err := map[string]interface{}{"registerRouteErr": validErr}
+	validate := validator.New()
+	validationErr := validate.Struct(registerUserRequest)
+	if validationErr != nil {
+		err := map[string]interface{}{"registerRouteErr": validationErr.Error()}
 		writer.WriteHeader(http.StatusUnauthorized)
 		s.HandleRouteError(writer, err)
 		return
 	}
 
-	findUser, _ := s.businessLogic.GetUserByUsername(username)
+	registerUserRequest.Password, _ = utils.Password(registerUserRequest.Password).Hash()
+
+	findUser, _ := s.businessLogic.GetUserByUsername(registerUserRequest.Username)
 	if findUser.ID != "" {
-		err := map[string]interface{}{"registerRouteErr": errors.New(fmt.Sprintf("user %s already exist", username)).Error()}
+		err := map[string]interface{}{"registerRouteErr": fmt.Errorf("user %s already exist", registerUserRequest.Username).Error()}
 		writer.WriteHeader(http.StatusUnauthorized)
 		s.HandleRouteError(writer, err)
 		return
 	}
 
-	token := s.token.NewToken(username, password)
+	token := s.token.NewToken(registerUserRequest.Username, registerUserRequest.Password)
 	tokenErr := token.GenerateToken()
 	if tokenErr != nil {
 		err := map[string]interface{}{"routeRegisterErr": tokenErr.Error()}
@@ -49,15 +49,9 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 		return
 	}
 
-	newUser := business_logic.User{
-		Username:   username,
-		Password:   password,
-		Name:       request.PostFormValue("name"),
-		Lastname:   request.PostFormValue("lastname"),
-		Token:      token.Token,
-		ExpireAt:   token.ExpiresAt,
-		IsLoggedIn: false,
-	}
+	newUser := fromUserRegisterRequestToBlUser(registerUserRequest)
+	newUser.Token = token.Token
+	newUser.ExpireAt = token.ExpiresAt
 
 	userCreated, userCreatedErr := s.businessLogic.CreateNewUser(newUser)
 	if userCreatedErr != nil {
@@ -66,5 +60,5 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 		s.HandleRouteError(writer, err)
 		return
 	}
-	s.HandleResponse(writer, userCreated)
+	s.HandleResponse(writer, fromBlUserToUserRegisterRequest(userCreated))
 }

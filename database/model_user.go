@@ -12,6 +12,7 @@ type User struct {
 	Lastname   string             `bson:"lastname"`
 	Username   string             `bson:"username"`
 	Password   string             `bson:"password"`
+	Email      string             `bson:"email"`
 	Token      string             `bson:"token"`
 	ExpireAt   time.Time          `bson:"expire_at"`
 	Motorcycle []Motorcycle       `bson:"motorcycles"`
