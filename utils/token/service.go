@@ -12,6 +12,6 @@ type Token struct {
 type TokenService interface {
 	NewToken(username string, password string) *Token
 	GenerateToken() error
-	ValidateToken() error
+	ValidateToken(oldUserToken string) error
 	RefreshToken()
 }

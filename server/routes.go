@@ -14,10 +14,16 @@ func (s *MotoManagementServer) RegisterRoutes() {
 
 	// Add manual routes
 	privateRoutes := make(Routes)
+	privateRoutes["token"] = TokenRoute
 	privateRoutes["register"] = RegisterRoute
 	privateRoutes["login"] = LoginRoute
 
-	/*-------------------------------------------------*/
+	/*------------------------------------------------*
+	 *				MOTORCYCLE ROUTES				  *
+	 *------------------------------------------------*/
+
+	privateRoutes["motorcycles/create"] = MotorcyclesCreateRoute
+
 	for url, routeHandler := range privateRoutes {
 		// Building url like /web/auth, /web/login
 		routeUrl := fmt.Sprintf("/%s/%s", adminPrefix, url)

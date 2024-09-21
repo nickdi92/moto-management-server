@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (t *Token) ValidateToken() error {
+func (t *Token) ValidateToken(oldUserToken string) error {
 	token, err := jwt.Parse(t.Token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("JWT_TOKEN_SECRET_KEY")), nil
 	})
@@ -26,6 +26,10 @@ func (t *Token) ValidateToken() error {
 	now := time.Now()
 	if now.Equal(exp.Time) || now.After(exp.Time) {
 		return errors.New("token is expired")
+	}
+
+	if oldUserToken != "" && (oldUserToken != t.Token) {
+		return errors.New("token mismatch error")
 	}
 
 	return nil

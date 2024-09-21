@@ -124,7 +124,7 @@ export default function Login() {
                 >
                   Sign in
                 </button>
-                <a href="/admin/login"               
+                <a href="/admin/register"               
                    className="flex w-full justify-center rounded-md bg-green-600 mt-4 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     Create an account
                 </a>

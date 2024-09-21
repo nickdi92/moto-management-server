@@ -4,8 +4,6 @@ import (
 	"moto-management-server/business_logic"
 	"moto-management-server/utils/token"
 	"net/http"
-
-	"github.com/thedevsaddam/govalidator"
 )
 
 type Route func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request)
@@ -29,6 +27,7 @@ type MotoManagementServerInterface interface {
 	HandleRoutes() error
 
 	// Validate request methods
-	ValidateRequest(request *http.Request, rules govalidator.MapData) error
+	ValidateRequest(structToValidate interface{}) error
+	ValidateAuthorization(writer http.ResponseWriter, request *http.Request) (string, error)
 	ValidateJwtToken(incomingJwtToken string, savedJwtToken string) error
 }

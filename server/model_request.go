@@ -20,3 +20,16 @@ type UserLoginRequest struct {
 	ExpireAt   *time.Time `json:"expire_at"`
 	IsLoggedIn bool       `json:"is_logged_in"`
 }
+
+type MotorcycleCreateRequest struct {
+}
+
+type TokenRequest struct {
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+type TokenResponse struct {
+	Token    string     `json:"token"`
+	ExpireAt *time.Time `json:"expire_at"`
+}

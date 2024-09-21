@@ -3,22 +3,16 @@ package server
 import (
 	"errors"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/thedevsaddam/govalidator"
 	"net/http"
 )
 
-func (s *MotoManagementServer) ValidateRequest(request *http.Request, rules govalidator.MapData) error {
-	opts := govalidator.Options{
-		Request: request,
-		Rules:   rules,
-	}
-
-	v := govalidator.New(opts)
-	validationErr := v.Validate()
-	if len(validationErr) > 0 {
-		err := errors.New(fmt.Sprintf("Error validating request: %v", validationErr.Encode()))
-		return err
+func (s *MotoManagementServer) ValidateRequest(structToValidate interface{}) error {
+	validate := validator.New()
+	validationErr := validate.Struct(structToValidate)
+	if validationErr != nil {
+		return validationErr
 	}
 	return nil
 }
@@ -37,4 +31,15 @@ func (s *MotoManagementServer) ValidateJwtToken(incomingJwtToken string, savedJw
 	}
 
 	return nil
+}
+
+func (s *MotoManagementServer) ValidateAuthorization(writer http.ResponseWriter, request *http.Request) (string, error) {
+	jwtToken := request.Header.Get("Authorization")
+	if jwtToken == "" {
+		err := map[string]interface{}{"loginRouteErr": fmt.Errorf("missing authorization Bearer").Error()}
+		writer.WriteHeader(http.StatusUnauthorized)
+		s.HandleRouteError(writer, err)
+		return "", nil
+	}
+	return jwtToken, nil
 }

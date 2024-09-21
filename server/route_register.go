@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 	"moto-management-server/utils"
+	"moto-management-server/utils/validator"
 	"net/http"
-
-	"github.com/go-playground/validator/v10"
+	"strings"
 )
 
 var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
@@ -21,8 +21,7 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal([]byte(body), &registerUserRequest)
 
-	validate := validator.New()
-	validationErr := validate.Struct(registerUserRequest)
+	validationErr := s.ValidateRequest(registerUserRequest)
 	if validationErr != nil {
 		err := map[string]interface{}{"registerRouteErr": validationErr.Error()}
 		writer.WriteHeader(http.StatusUnauthorized)
@@ -30,7 +29,17 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 		return
 	}
 
+	emailValidator := validator.NewEmailValidator(registerUserRequest.Email)
+	validationEmailErr := emailValidator.Validate()
+	if validationEmailErr != nil {
+		err := map[string]interface{}{"registerRouteErr": validationEmailErr.Error()}
+		writer.WriteHeader(http.StatusUnauthorized)
+		s.HandleRouteError(writer, err)
+		return
+	}
+
 	registerUserRequest.Password, _ = utils.Password(registerUserRequest.Password).Hash()
+	registerUserRequest.Username = strings.ToLower(registerUserRequest.Username)
 
 	findUser, _ := s.businessLogic.GetUserByUsername(registerUserRequest.Username)
 	if findUser.ID != "" {
