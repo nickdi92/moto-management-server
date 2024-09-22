@@ -20,3 +20,8 @@ type UserLoginRequest struct {
 	ExpireAt   *time.Time `json:"expire_at"`
 	IsLoggedIn bool       `json:"is_logged_in"`
 }
+
+type MotorBiker struct {
+	Username    string       `json:"username" validate:"required"`
+	Motorcycles []Motorcycle `json:"motorcycles" validate:"required"`
+}

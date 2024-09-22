@@ -7,7 +7,6 @@ import (
 
 type Motorcycle struct {
 	ID                  string              `json:"id"`
-	Username            string              `json:"username" validate:"required"`
 	LicensePlate        string              `json:"license_plate" validate:"required"` // Targa
 	MotorcycleDataSheet MotorcycleDataSheet `json:"motorcycle_data_sheet" validate:"required"`
 	FuelSupplies        FuelSupplies        `json:"fuel_supplies"`   // @TODO Gestione rifornimenti

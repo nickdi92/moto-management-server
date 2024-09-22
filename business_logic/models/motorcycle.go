@@ -29,6 +29,7 @@ type MotorcycleDataSheet struct {
 type FuelSupplies struct{}
 
 type Insurance struct {
+	IsActive   bool            `json:"is_active"`
 	Company    string          `json:"company"`
 	PriceMoney currency.Amount `json:"price_money"`
 	Details    string          `json:"details"`

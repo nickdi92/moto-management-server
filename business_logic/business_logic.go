@@ -14,7 +14,7 @@ type BusinessLogicInterface interface {
 	CreateNewUser(user models.User) (models.User, error)
 	UpdateUser(user models.User) (models.User, error)
 
-	AddMotorcycleToUser(user models.User, motorcycle models.Motorcycle) (models.Motorcycle, error)
+	AddMotorcycleToUser(user models.User) (models.User, error)
 }
 
 func (b *BusinessLogic) NewBusinessLogic() *BusinessLogic {

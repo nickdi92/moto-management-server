@@ -12,7 +12,7 @@ func fromMongoUserToBlUser(mongoUser database.User) models.User {
 	if mongoUser.ID.IsZero() {
 		id = ""
 	}
-	return models.User{
+	blUser := models.User{
 		ID:         id,
 		Username:   mongoUser.Username,
 		Name:       mongoUser.Name,
@@ -25,6 +25,40 @@ func fromMongoUserToBlUser(mongoUser database.User) models.User {
 		UpdatedAt:  &mongoUser.UpdatedAt,
 		IsLoggedIn: mongoUser.IsLoggedIn,
 	}
+
+	if mongoUser.Motorcycles != nil {
+		blMotorcycles := make([]models.Motorcycle, 0)
+		for _, mt := range mongoUser.Motorcycles {
+			blMotorcycles = append(blMotorcycles, models.Motorcycle{
+				ID:           mt.ID,
+				LicensePlate: mt.LicensePlate,
+				MotorcycleDataSheet: models.MotorcycleDataSheet{
+					Name:               mt.MotorcycleDataSheet.Name,
+					Model:              mt.MotorcycleDataSheet.Model,
+					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
+					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
+					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
+					Insurance: models.Insurance{
+						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
+						Company:    mt.MotorcycleDataSheet.Insurance.Company,
+						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney,
+						Details:    mt.MotorcycleDataSheet.Insurance.Details,
+						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
+					},
+				},
+				FuelSupplies:   models.FuelSupplies{},
+				Service:        models.Service{},
+				Inspection:     models.Inspection{},
+				AccidentReport: models.AccidentReport{},
+				CreatedAt:      mt.CreatedAt,
+				UpdatedAt:      mt.UpdatedAt,
+			})
+		}
+
+		blUser.Motorcycles = blMotorcycles
+	}
+
+	return blUser
 }
 
 func fromBlUserToMongoUser(blUser models.User) database.User {
@@ -35,12 +69,47 @@ func fromBlUserToMongoUser(blUser models.User) database.User {
 		Password:   blUser.Password,
 		Email:      blUser.Email,
 		Token:      blUser.Token,
-		ExpireAt:   *blUser.ExpireAt,
 		IsLoggedIn: blUser.IsLoggedIn,
+	}
+
+	if blUser.ExpireAt != nil {
+		mongoUser.ExpireAt = *blUser.ExpireAt
 	}
 
 	if blUser.ID != "" {
 		mongoUser.ID, _ = primitive.ObjectIDFromHex(blUser.ID)
+	}
+
+	if blUser.Motorcycles != nil {
+		mongoMotorcycles := make([]database.Motorcycle, 0)
+		for _, mt := range blUser.Motorcycles {
+			mongoMotorcycles = append(mongoMotorcycles, database.Motorcycle{
+				ID:           mt.ID,
+				LicensePlate: mt.LicensePlate,
+				MotorcycleDataSheet: database.MotorcycleDataSheet{
+					Name:               mt.MotorcycleDataSheet.Name,
+					Model:              mt.MotorcycleDataSheet.Model,
+					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
+					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
+					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
+					Insurance: database.Insurance{
+						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
+						Company:    mt.MotorcycleDataSheet.Insurance.Company,
+						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney,
+						Details:    mt.MotorcycleDataSheet.Insurance.Details,
+						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
+					},
+				},
+				FuelSupplies:   database.FuelSupplies{},
+				Service:        database.Service{},
+				Inspection:     database.Inspection{},
+				AccidentReport: database.AccidentReport{},
+				CreatedAt:      mt.CreatedAt,
+				UpdatedAt:      mt.UpdatedAt,
+			})
+		}
+
+		mongoUser.Motorcycles = mongoMotorcycles
 	}
 	return mongoUser
 }
