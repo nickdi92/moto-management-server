@@ -1,4 +1,4 @@
-package business_logic
+package models
 
 import (
 	"golang.org/x/text/currency"

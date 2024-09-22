@@ -1,17 +1,18 @@
 package business_logic
 
 import (
+	"moto-management-server/business_logic/models"
 	"moto-management-server/database"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func fromMongoUserToBlUser(mongoUser database.User) User {
+func fromMongoUserToBlUser(mongoUser database.User) models.User {
 	id := mongoUser.ID.Hex()
 	if mongoUser.ID.IsZero() {
 		id = ""
 	}
-	return User{
+	return models.User{
 		ID:         id,
 		Username:   mongoUser.Username,
 		Name:       mongoUser.Name,
@@ -26,7 +27,7 @@ func fromMongoUserToBlUser(mongoUser database.User) User {
 	}
 }
 
-func fromBlUserToMongoUser(blUser User) database.User {
+func fromBlUserToMongoUser(blUser models.User) database.User {
 	mongoUser := database.User{
 		Username:   blUser.Username,
 		Name:       blUser.Name,

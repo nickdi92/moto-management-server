@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"io"
+	"moto-management-server/server/models"
 	"moto-management-server/utils"
 	"net/http"
 )
@@ -15,15 +16,14 @@ var LoginRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 		return
 	}
 
-	var userLogin UserLoginRequest
+	var userLogin models.UserLoginRequest
 	bodyReader, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal([]byte(bodyReader), &userLogin)
 
 	validationErr := s.ValidateRequest(userLogin)
 	if validationErr != nil {
 		err := map[string]interface{}{"loginRouteErr": validationErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -32,8 +32,7 @@ var LoginRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 	user, userErr := s.businessLogic.GetUserByUsername(userLogin.Username)
 	if userErr != nil {
 		err := map[string]interface{}{"loginRouteErr": userErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -42,8 +41,7 @@ var LoginRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 	validateErr := token.ValidateToken(user.Token)
 	if validateErr != nil {
 		err := map[string]interface{}{"loginRouteErr": validateErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -54,8 +52,7 @@ var LoginRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 
 	if updateErr != nil {
 		err := map[string]interface{}{"loginRouteErr": updateErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 

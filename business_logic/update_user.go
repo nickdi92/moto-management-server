@@ -1,10 +1,12 @@
 package business_logic
 
-func (b *BusinessLogic) UpdateUser(user User) (User, error) {
+import "moto-management-server/business_logic/models"
+
+func (b *BusinessLogic) UpdateUser(user models.User) (models.User, error) {
 
 	newUser, newUserErr := b.mongoClient.UpdateUser(fromBlUserToMongoUser(user))
 	if newUserErr != nil {
-		return User{}, newUserErr
+		return models.User{}, newUserErr
 	}
 
 	return fromMongoUserToBlUser(newUser), nil

@@ -22,7 +22,7 @@ func (s *MotoManagementServer) RegisterRoutes() {
 	 *				MOTORCYCLE ROUTES				  *
 	 *------------------------------------------------*/
 
-	privateRoutes["motorcycles/create"] = MotorcyclesCreateRoute
+	privateRoutes["motorcycle/create"] = MotorcyclesCreateRoute
 
 	for url, routeHandler := range privateRoutes {
 		// Building url like /web/auth, /web/login
@@ -47,12 +47,14 @@ func (s *MotoManagementServer) HandleRoutes() error {
 	return nil
 }
 
-func (s *MotoManagementServer) HandleRouteError(writer http.ResponseWriter, err interface{}) {
+func (s *MotoManagementServer) HandleRouteError(writer http.ResponseWriter, err interface{}, status int) {
 	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(status)
 	_ = json.NewEncoder(writer).Encode(err)
 }
 
 func (s *MotoManagementServer) HandleResponse(writer http.ResponseWriter, result interface{}) {
 	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(writer).Encode(result)
 }

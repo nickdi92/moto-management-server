@@ -2,18 +2,19 @@ package business_logic
 
 import (
 	"errors"
+	"moto-management-server/business_logic/models"
 )
 
-func (b *BusinessLogic) GetUserByUsername(username string) (User, error) {
+func (b *BusinessLogic) GetUserByUsername(username string) (models.User, error) {
 	if username == "" {
-		return User{}, errors.New("No username provided") //@TODO improve errors
+		return models.User{}, errors.New("No username provided") //@TODO improve errors
 	}
 	// mongo, _ := b.mongoClient.NewMongoClient() @TODO This is wrong
 	mongoUser, mongoFindErr := b.mongoClient.GetUserByUsername(username)
 
 	if mongoFindErr != nil {
-		return User{}, errors.New(mongoFindErr.Error())
+		return models.User{}, errors.New(mongoFindErr.Error())
 	}
-	
+
 	return fromMongoUserToBlUser(mongoUser), nil
 }

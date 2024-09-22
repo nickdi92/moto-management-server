@@ -37,8 +37,7 @@ func (s *MotoManagementServer) ValidateAuthorization(writer http.ResponseWriter,
 	jwtToken := request.Header.Get("Authorization")
 	if jwtToken == "" {
 		err := map[string]interface{}{"loginRouteErr": fmt.Errorf("missing authorization Bearer").Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return "", nil
 	}
 	return jwtToken, nil

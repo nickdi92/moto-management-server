@@ -1,6 +1,7 @@
 package business_logic
 
 import (
+	"moto-management-server/business_logic/models"
 	"moto-management-server/database"
 	"moto-management-server/utils"
 	"os"
@@ -9,9 +10,11 @@ import (
 type BusinessLogicInterface interface {
 	NewBusinessLogic() *BusinessLogic
 
-	GetUserByUsername(username string) (User, error)
-	CreateNewUser(user User) (User, error)
-	UpdateUser(user User) (User, error)
+	GetUserByUsername(username string) (models.User, error)
+	CreateNewUser(user models.User) (models.User, error)
+	UpdateUser(user models.User) (models.User, error)
+
+	AddMotorcycleToUser(user models.User, motorcycle models.Motorcycle) (models.Motorcycle, error)
 }
 
 func (b *BusinessLogic) NewBusinessLogic() *BusinessLogic {

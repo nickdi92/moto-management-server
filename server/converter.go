@@ -1,9 +1,12 @@
 package server
 
-import "moto-management-server/business_logic"
+import (
+	models2 "moto-management-server/business_logic/models"
+	"moto-management-server/server/models"
+)
 
-func fromUserRegisterRequestToBlUser(registerUser RegisterUserRequest) business_logic.User {
-	return business_logic.User{
+func fromUserRegisterRequestToBlUser(registerUser models.RegisterUserRequest) models2.User {
+	return models2.User{
 		Username:   registerUser.Username,
 		Password:   registerUser.Password,
 		Email:      registerUser.Email,
@@ -13,8 +16,8 @@ func fromUserRegisterRequestToBlUser(registerUser RegisterUserRequest) business_
 	}
 }
 
-func fromBlUserToUserRegisterRequest(blUser business_logic.User) RegisterUserRequest {
-	return RegisterUserRequest{
+func fromBlUserToUserRegisterRequest(blUser models2.User) models.RegisterUserRequest {
+	return models.RegisterUserRequest{
 		Username:   blUser.Username,
 		Password:   blUser.Password,
 		Email:      blUser.Email,
@@ -28,12 +31,20 @@ func fromBlUserToUserRegisterRequest(blUser business_logic.User) RegisterUserReq
 
 /********/
 
-func fromBlUserToUserLoginRequest(blUser business_logic.User) UserLoginRequest {
-	return UserLoginRequest{
+func fromBlUserToUserLoginRequest(blUser models2.User) models.UserLoginRequest {
+	return models.UserLoginRequest{
 		Username:   blUser.Username,
 		Password:   blUser.Password,
 		Token:      blUser.Token,
 		ExpireAt:   blUser.ExpireAt,
 		IsLoggedIn: blUser.IsLoggedIn,
 	}
+}
+
+func fromServerMotorcycleToBlMotorcycle(motorcycle models.Motorcycle) models2.Motorcycle {
+	return models2.Motorcycle{}
+}
+
+func fromBlMotorcycleToServerMotorcycle(motorcycle models2.Motorcycle) models.Motorcycle {
+	return models.Motorcycle{}
 }

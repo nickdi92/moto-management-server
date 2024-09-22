@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"moto-management-server/server/models"
 	"moto-management-server/utils"
 	"moto-management-server/utils/validator"
 	"net/http"
@@ -17,15 +18,14 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	* 3. Create New user with new jwt token
 	 */
 
-	var registerUserRequest RegisterUserRequest
+	var registerUserRequest models.RegisterUserRequest
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal([]byte(body), &registerUserRequest)
 
 	validationErr := s.ValidateRequest(registerUserRequest)
 	if validationErr != nil {
 		err := map[string]interface{}{"registerRouteErr": validationErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -33,8 +33,7 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	validationEmailErr := emailValidator.Validate()
 	if validationEmailErr != nil {
 		err := map[string]interface{}{"registerRouteErr": validationEmailErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -44,8 +43,7 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	findUser, _ := s.businessLogic.GetUserByUsername(registerUserRequest.Username)
 	if findUser.ID != "" {
 		err := map[string]interface{}{"registerRouteErr": fmt.Errorf("user %s already exist", registerUserRequest.Username).Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -53,8 +51,7 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	tokenErr := token.GenerateToken()
 	if tokenErr != nil {
 		err := map[string]interface{}{"routeRegisterErr": tokenErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -65,8 +62,7 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	userCreated, userCreatedErr := s.businessLogic.CreateNewUser(newUser)
 	if userCreatedErr != nil {
 		err := map[string]interface{}{"registerRouteErr": userCreatedErr.Error()}
-		writer.WriteHeader(http.StatusUnauthorized)
-		s.HandleRouteError(writer, err)
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 	s.HandleResponse(writer, fromBlUserToUserRegisterRequest(userCreated))

@@ -1,4 +1,4 @@
-package business_logic
+package models
 
 import (
 	"time"
