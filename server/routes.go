@@ -19,6 +19,12 @@ func (s *MotoManagementServer) RegisterRoutes() {
 	privateRoutes["login"] = LoginRoute
 
 	/*------------------------------------------------*
+	 *					 USER ROUTES				  *
+	 *------------------------------------------------*/
+
+	privateRoutes["user/get"] = GetUserRoute
+
+	/*------------------------------------------------*
 	 *				MOTORCYCLE ROUTES				  *
 	 *------------------------------------------------*/
 

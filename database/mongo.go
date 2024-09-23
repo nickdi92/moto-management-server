@@ -22,8 +22,6 @@ type MotoManagementMongoClientInterface interface {
 	GetUserByUsername(username string) (models.User, error)
 	CreateNewUser(userToCreate models.User) (models.User, error)
 	UpdateUser(userToUpdate models.User) (models.User, error)
-
-	DeleteMotorbike(username string, licensePlate string) (bool, error)
 }
 
 func (m *MotoManagementMongoClient) NewMongoClient() (*MotoManagementMongoClient, error) {
