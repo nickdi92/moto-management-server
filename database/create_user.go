@@ -2,17 +2,18 @@ package database
 
 import (
 	"context"
+	"moto-management-server/database/models"
 	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (m *MotoManagementMongoClient) CreateNewUser(userToCreate User) (User, error) {
+func (m *MotoManagementMongoClient) CreateNewUser(userToCreate models.User) (models.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	mongoUser := User{}
+	mongoUser := models.User{}
 	userToCreate.CreatedAt = time.Now()
 	userToCreate.UpdatedAt = time.Now()
 

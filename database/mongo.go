@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"moto-management-server/database/models"
 	"moto-management-server/errors"
 	"os"
 	"time"
@@ -18,9 +19,11 @@ type MotoManagementMongoClient struct {
 type MotoManagementMongoClientInterface interface {
 	NewMongoClient() (*MotoManagementMongoClient, error)
 
-	GetUserByUsername(username string) (User, error)
-	CreateNewUser(userToCreate User) (User, error)
-	UpdateUser(userToUpdate User) (User, error)
+	GetUserByUsername(username string) (models.User, error)
+	CreateNewUser(userToCreate models.User) (models.User, error)
+	UpdateUser(userToUpdate models.User) (models.User, error)
+
+	DeleteMotorbike(username string, licensePlate string) (bool, error)
 }
 
 func (m *MotoManagementMongoClient) NewMongoClient() (*MotoManagementMongoClient, error) {

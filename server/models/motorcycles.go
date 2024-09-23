@@ -41,3 +41,19 @@ type Service struct{}
 type Inspection struct{}
 
 type AccidentReport struct{}
+
+type MotorBiker struct {
+	Username    string       `json:"username" validate:"required"`
+	Motorcycles []Motorcycle `json:"motorcycles" validate:"required"`
+}
+
+/** ----------------------------------- */
+
+type DeleteMotorcycle struct {
+	Username     string `json:"username" validate:"required"`
+	LicensePlate string `json:"license_plate" validate:"required"`
+}
+
+type DeleteMotorcycleResponse struct {
+	IsDeleted bool `json:"is_deleted"`
+}

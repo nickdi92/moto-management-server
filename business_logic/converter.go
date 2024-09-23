@@ -2,12 +2,12 @@ package business_logic
 
 import (
 	"moto-management-server/business_logic/models"
-	"moto-management-server/database"
+	models2 "moto-management-server/database/models"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func fromMongoUserToBlUser(mongoUser database.User) models.User {
+func fromMongoUserToBlUser(mongoUser models2.User) models.User {
 	id := mongoUser.ID.Hex()
 	if mongoUser.ID.IsZero() {
 		id = ""
@@ -61,8 +61,8 @@ func fromMongoUserToBlUser(mongoUser database.User) models.User {
 	return blUser
 }
 
-func fromBlUserToMongoUser(blUser models.User) database.User {
-	mongoUser := database.User{
+func fromBlUserToMongoUser(blUser models.User) models2.User {
+	mongoUser := models2.User{
 		Username:   blUser.Username,
 		Name:       blUser.Name,
 		Lastname:   blUser.Lastname,
@@ -81,18 +81,18 @@ func fromBlUserToMongoUser(blUser models.User) database.User {
 	}
 
 	if blUser.Motorcycles != nil {
-		mongoMotorcycles := make([]database.Motorcycle, 0)
+		mongoMotorcycles := make([]models2.Motorcycle, 0)
 		for _, mt := range blUser.Motorcycles {
-			mongoMotorcycles = append(mongoMotorcycles, database.Motorcycle{
+			mongoMotorcycles = append(mongoMotorcycles, models2.Motorcycle{
 				ID:           mt.ID,
 				LicensePlate: mt.LicensePlate,
-				MotorcycleDataSheet: database.MotorcycleDataSheet{
+				MotorcycleDataSheet: models2.MotorcycleDataSheet{
 					Name:               mt.MotorcycleDataSheet.Name,
 					Model:              mt.MotorcycleDataSheet.Model,
 					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
 					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
 					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
-					Insurance: database.Insurance{
+					Insurance: models2.Insurance{
 						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
 						Company:    mt.MotorcycleDataSheet.Insurance.Company,
 						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney,
@@ -100,10 +100,10 @@ func fromBlUserToMongoUser(blUser models.User) database.User {
 						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
 					},
 				},
-				FuelSupplies:   database.FuelSupplies{},
-				Service:        database.Service{},
-				Inspection:     database.Inspection{},
-				AccidentReport: database.AccidentReport{},
+				FuelSupplies:   models2.FuelSupplies{},
+				Service:        models2.Service{},
+				Inspection:     models2.Inspection{},
+				AccidentReport: models2.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
 				UpdatedAt:      mt.UpdatedAt,
 			})
