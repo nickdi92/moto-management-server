@@ -28,7 +28,7 @@ func (s *MotoManagementServer) RegisterRoutes() {
 	 *				MOTORCYCLE ROUTES				  *
 	 *------------------------------------------------*/
 
-	privateRoutes["motorcycle/create"] = MotorcyclesCreateRoute
+	privateRoutes["motorcycle/add"] = MotorcyclesAddRoute
 	privateRoutes["motorcycle/delete"] = MotorcyclesDeleteRoute
 
 	for url, routeHandler := range privateRoutes {

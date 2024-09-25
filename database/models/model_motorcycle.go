@@ -1,7 +1,6 @@
 package models
 
 import (
-	"golang.org/x/text/currency"
 	"time"
 )
 
@@ -23,17 +22,19 @@ type MotorcycleDataSheet struct {
 	ModelYear          string    `json:"model_year" bson:"model_year"`
 	EngineDisplacement string    `json:"engine_displacement" bson:"engine_displacement"` // Cilindrata
 	TankCapacity       string    `json:"tank_capacity" bson:"tank_capacity"`             // Capacità serbatoio
-	Insurance          Insurance `json:"insurance" bson:"insurance"`                     // Assicurazione
+	Kilometers         string    `json:"kilometers" bson:"kilometers"`
+	Insurance          Insurance `json:"insurance" bson:"insurance"` // Assicurazione
 }
 
 type FuelSupplies struct{}
 
 type Insurance struct {
-	IsActive   bool            `json:"is_active" bson:"is_active"`
-	Company    string          `json:"company" bson:"company"`
-	PriceMoney currency.Amount `json:"price_money" bson:"price_money"`
-	Details    string          `json:"details" bson:"details"`
-	ExpireAt   *time.Time      `json:"expire_at" bson:"expire_at"`
+	IsActive   bool       `json:"is_active" bson:"is_active"`
+	Company    string     `json:"company" bson:"company"`
+	PriceMoney float64    `json:"price_money" bson:"price_money"`
+	Currency   string     `json:"currency" bson:"currency"`
+	Details    string     `json:"details" bson:"details"`
+	ExpireAt   *time.Time `json:"expire_at" bson:"expire_at"`
 }
 
 type Service struct{}

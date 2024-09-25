@@ -7,14 +7,14 @@ import (
 	"net/http"
 )
 
-var MotorcyclesCreateRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
+var MotorcyclesAddRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
 	var motorBiker models.MotorBiker
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal(body, &motorBiker)
 
 	validationErr := s.ValidateRequest(motorBiker)
 	if validationErr != nil {
-		err := map[string]interface{}{"motorcycleCreateRoute": validationErr.Error()}
+		err := map[string]interface{}{"MotorcyclesAddRoute": validationErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
@@ -26,14 +26,14 @@ var MotorcyclesCreateRoute = func(s *MotoManagementServer, writer http.ResponseW
 
 	_, userErr := s.businessLogic.GetUserByUsername(motorBiker.Username)
 	if userErr != nil {
-		err := map[string]interface{}{"motorcycleCreateRoute": userErr.Error()}
+		err := map[string]interface{}{"MotorcyclesAddRoute": userErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusInternalServerError)
 		return
 	}
 
 	blMotorBiker, blResponseErr := s.businessLogic.UpdateUser(fromServerMotorBikerToBlUSer(motorBiker))
 	if blResponseErr != nil {
-		err := map[string]interface{}{"motorcycleCreateRoute": blResponseErr.Error()}
+		err := map[string]interface{}{"MotorcyclesAddRoute": blResponseErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusInternalServerError)
 		return
 	}

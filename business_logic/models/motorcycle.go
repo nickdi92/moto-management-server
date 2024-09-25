@@ -1,7 +1,7 @@
 package models
 
 import (
-	"golang.org/x/text/currency"
+	"github.com/Rhymond/go-money"
 	"time"
 )
 
@@ -23,17 +23,19 @@ type MotorcycleDataSheet struct {
 	ModelYear          string    `json:"model_year"`
 	EngineDisplacement string    `json:"engine_displacement"` // Cilindrata
 	TankCapacity       string    `json:"tank_capacity"`       // Capacità serbatoio
-	Insurance          Insurance `json:"insurance"`           // Assicurazione
+	Kilometers         string    `json:"kilometers"`
+	Insurance          Insurance `json:"insurance"` // Assicurazione
 }
 
 type FuelSupplies struct{}
 
 type Insurance struct {
-	IsActive   bool            `json:"is_active"`
-	Company    string          `json:"company"`
-	PriceMoney currency.Amount `json:"price_money"`
-	Details    string          `json:"details"`
-	ExpireAt   *time.Time      `json:"expire_at"`
+	IsActive   bool         `json:"is_active"`
+	Company    string       `json:"company"`
+	PriceMoney *money.Money `json:"price_money"`
+	Currency   string       `json:"currency"`
+	Details    string       `json:"details"`
+	ExpireAt   *time.Time   `json:"expire_at"`
 }
 
 type Service struct{}

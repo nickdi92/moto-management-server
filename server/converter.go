@@ -1,6 +1,7 @@
 package server
 
 import (
+	money2 "github.com/Rhymond/go-money"
 	models2 "moto-management-server/business_logic/models"
 	"moto-management-server/server/models"
 )
@@ -72,10 +73,12 @@ func fromBlMotorcyclesToServerMotorcycles(blMotorcycles []models2.Motorcycle) []
 					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
 					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
 					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
+					Kilometers:         mt.MotorcycleDataSheet.Kilometers,
 					Insurance: models.Insurance{
 						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
 						Company:    mt.MotorcycleDataSheet.Insurance.Company,
-						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney,
+						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney.AsMajorUnits(),
+						Currency:   mt.MotorcycleDataSheet.Insurance.Currency,
 						Details:    mt.MotorcycleDataSheet.Insurance.Details,
 						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
 					},
@@ -97,6 +100,11 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 	if serverMotorcycles != nil && len(serverMotorcycles) > 0 {
 		blMotorcycles := make([]models2.Motorcycle, 0)
 		for _, mt := range serverMotorcycles {
+			currency := mt.MotorcycleDataSheet.Insurance.Currency
+			if currency == "" {
+				currency = money2.EUR
+			}
+			money := money2.NewFromFloat(mt.MotorcycleDataSheet.Insurance.PriceMoney, currency)
 			blMotorcycles = append(blMotorcycles, models2.Motorcycle{
 				ID:           mt.ID,
 				LicensePlate: mt.LicensePlate,
@@ -106,10 +114,11 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
 					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
 					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
+					Kilometers:         mt.MotorcycleDataSheet.Kilometers,
 					Insurance: models2.Insurance{
 						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
 						Company:    mt.MotorcycleDataSheet.Insurance.Company,
-						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney,
+						PriceMoney: money,
 						Details:    mt.MotorcycleDataSheet.Insurance.Details,
 						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
 					},

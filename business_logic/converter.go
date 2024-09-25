@@ -1,6 +1,7 @@
 package business_logic
 
 import (
+	money2 "github.com/Rhymond/go-money"
 	"moto-management-server/business_logic/models"
 	models2 "moto-management-server/database/models"
 
@@ -13,49 +14,18 @@ func fromMongoUserToBlUser(mongoUser models2.User) models.User {
 		id = ""
 	}
 	blUser := models.User{
-		ID:         id,
-		Username:   mongoUser.Username,
-		Name:       mongoUser.Name,
-		Lastname:   mongoUser.Lastname,
-		Password:   mongoUser.Password,
-		Email:      mongoUser.Email,
-		Token:      mongoUser.Token,
-		ExpireAt:   &mongoUser.ExpireAt,
-		CreatedAt:  &mongoUser.CreatedAt,
-		UpdatedAt:  &mongoUser.UpdatedAt,
-		IsLoggedIn: mongoUser.IsLoggedIn,
-	}
-
-	if mongoUser.Motorcycles != nil {
-		blMotorcycles := make([]models.Motorcycle, 0)
-		for _, mt := range mongoUser.Motorcycles {
-			blMotorcycles = append(blMotorcycles, models.Motorcycle{
-				ID:           mt.ID,
-				LicensePlate: mt.LicensePlate,
-				MotorcycleDataSheet: models.MotorcycleDataSheet{
-					Name:               mt.MotorcycleDataSheet.Name,
-					Model:              mt.MotorcycleDataSheet.Model,
-					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
-					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
-					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
-					Insurance: models.Insurance{
-						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
-						Company:    mt.MotorcycleDataSheet.Insurance.Company,
-						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney,
-						Details:    mt.MotorcycleDataSheet.Insurance.Details,
-						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
-					},
-				},
-				FuelSupplies:   models.FuelSupplies{},
-				Service:        models.Service{},
-				Inspection:     models.Inspection{},
-				AccidentReport: models.AccidentReport{},
-				CreatedAt:      mt.CreatedAt,
-				UpdatedAt:      mt.UpdatedAt,
-			})
-		}
-
-		blUser.Motorcycles = blMotorcycles
+		ID:          id,
+		Username:    mongoUser.Username,
+		Name:        mongoUser.Name,
+		Lastname:    mongoUser.Lastname,
+		Password:    mongoUser.Password,
+		Email:       mongoUser.Email,
+		Token:       mongoUser.Token,
+		ExpireAt:    &mongoUser.ExpireAt,
+		CreatedAt:   &mongoUser.CreatedAt,
+		UpdatedAt:   &mongoUser.UpdatedAt,
+		IsLoggedIn:  mongoUser.IsLoggedIn,
+		Motorcycles: fromMongoMotorcyclesToBlMotorcycles(mongoUser.Motorcycles),
 	}
 
 	return blUser
@@ -63,13 +33,14 @@ func fromMongoUserToBlUser(mongoUser models2.User) models.User {
 
 func fromBlUserToMongoUser(blUser models.User) models2.User {
 	mongoUser := models2.User{
-		Username:   blUser.Username,
-		Name:       blUser.Name,
-		Lastname:   blUser.Lastname,
-		Password:   blUser.Password,
-		Email:      blUser.Email,
-		Token:      blUser.Token,
-		IsLoggedIn: blUser.IsLoggedIn,
+		Username:    blUser.Username,
+		Name:        blUser.Name,
+		Lastname:    blUser.Lastname,
+		Password:    blUser.Password,
+		Email:       blUser.Email,
+		Token:       blUser.Token,
+		IsLoggedIn:  blUser.IsLoggedIn,
+		Motorcycles: fromBlMotorcyclesToMongoMotorcycles(blUser.Motorcycles),
 	}
 
 	if blUser.ExpireAt != nil {
@@ -80,9 +51,13 @@ func fromBlUserToMongoUser(blUser models.User) models2.User {
 		mongoUser.ID, _ = primitive.ObjectIDFromHex(blUser.ID)
 	}
 
-	if blUser.Motorcycles != nil {
+	return mongoUser
+}
+
+func fromBlMotorcyclesToMongoMotorcycles(blMotorcycles []models.Motorcycle) []models2.Motorcycle {
+	if blMotorcycles != nil {
 		mongoMotorcycles := make([]models2.Motorcycle, 0)
-		for _, mt := range blUser.Motorcycles {
+		for _, mt := range blMotorcycles {
 			mongoMotorcycles = append(mongoMotorcycles, models2.Motorcycle{
 				ID:           mt.ID,
 				LicensePlate: mt.LicensePlate,
@@ -92,10 +67,12 @@ func fromBlUserToMongoUser(blUser models.User) models2.User {
 					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
 					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
 					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
+					Kilometers:         mt.MotorcycleDataSheet.Kilometers,
 					Insurance: models2.Insurance{
 						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
 						Company:    mt.MotorcycleDataSheet.Insurance.Company,
-						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney,
+						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney.AsMajorUnits(),
+						Currency:   mt.MotorcycleDataSheet.Insurance.PriceMoney.Currency().Code,
 						Details:    mt.MotorcycleDataSheet.Insurance.Details,
 						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
 					},
@@ -109,7 +86,45 @@ func fromBlUserToMongoUser(blUser models.User) models2.User {
 			})
 		}
 
-		mongoUser.Motorcycles = mongoMotorcycles
+		return mongoMotorcycles
 	}
-	return mongoUser
+	return nil
+}
+
+func fromMongoMotorcyclesToBlMotorcycles(mongoMotorcycles []models2.Motorcycle) []models.Motorcycle {
+	if mongoMotorcycles != nil {
+		blMotorcycles := make([]models.Motorcycle, 0)
+		for _, mt := range mongoMotorcycles {
+			money := money2.NewFromFloat(mt.MotorcycleDataSheet.Insurance.PriceMoney, mt.MotorcycleDataSheet.Insurance.Currency)
+			blMotorcycles = append(blMotorcycles, models.Motorcycle{
+				ID:           mt.ID,
+				LicensePlate: mt.LicensePlate,
+				MotorcycleDataSheet: models.MotorcycleDataSheet{
+					Name:               mt.MotorcycleDataSheet.Name,
+					Model:              mt.MotorcycleDataSheet.Model,
+					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
+					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
+					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
+					Kilometers:         mt.MotorcycleDataSheet.Kilometers,
+					Insurance: models.Insurance{
+						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
+						Company:    mt.MotorcycleDataSheet.Insurance.Company,
+						PriceMoney: money,
+						Currency:   mt.MotorcycleDataSheet.Insurance.Currency,
+						Details:    mt.MotorcycleDataSheet.Insurance.Details,
+						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
+					},
+				},
+				FuelSupplies:   models.FuelSupplies{},
+				Service:        models.Service{},
+				Inspection:     models.Inspection{},
+				AccidentReport: models.AccidentReport{},
+				CreatedAt:      mt.CreatedAt,
+				UpdatedAt:      mt.UpdatedAt,
+			})
+		}
+
+		return blMotorcycles
+	}
+	return nil
 }
