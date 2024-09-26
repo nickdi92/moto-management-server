@@ -14,14 +14,14 @@ func (s *MotoManagementServer) RegisterRoutes() {
 
 	// Add manual routes
 	privateRoutes := make(Routes)
-	privateRoutes["token"] = TokenRoute
-	privateRoutes["register"] = RegisterRoute
-	privateRoutes["login"] = LoginRoute
 
 	/*------------------------------------------------*
 	 *					 USER ROUTES				  *
 	 *------------------------------------------------*/
 
+	privateRoutes["user/refresh-token"] = TokenRoute
+	privateRoutes["user/create"] = RegisterRoute
+	privateRoutes["user/login"] = LoginRoute
 	privateRoutes["user/get"] = GetUserRoute
 
 	/*------------------------------------------------*
@@ -31,6 +31,12 @@ func (s *MotoManagementServer) RegisterRoutes() {
 	privateRoutes["motorcycle/add"] = MotorcyclesAddRoute
 	privateRoutes["motorcycle/delete"] = MotorcyclesDeleteRoute
 	privateRoutes["motorcycle/getByLicensePlate"] = MotorcyclesGetByLicensePlateRoute
+
+	/*------------------------------------------------*
+	 *				  	FUEL ROUTES				   	  *
+	 *------------------------------------------------*/
+
+	privateRoutes["motorcycle/fuel/add"] = MotorcyclesAddFuelRoute
 
 	for url, routeHandler := range privateRoutes {
 		// Building url like /web/auth, /web/login
