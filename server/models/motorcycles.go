@@ -27,7 +27,10 @@ type MotorcycleDataSheet struct {
 }
 
 type FuelSupplies struct {
+	Username      string        `json:"username" validate:"required"`
+	LicensePlate  string        `json:"license_plate" validate:"required"`
 	PetrolStation PetrolStation `json:"location"`
+	FullFuel      bool          `json:"full_fuel"`
 	CreatedAt     *time.Time    `json:"json"`
 }
 
@@ -52,7 +55,15 @@ type MotorBiker struct {
 }
 
 type PetrolStation struct {
-	Name string `json:"name"`
+	Name               string  `json:"name"`
+	Street             string  `json:"street"`
+	City               string  `json:"city"`
+	Province           string  `json:"province"`
+	State              string  `json:"state"`
+	FuelType           string  `json:"fuel_type"`
+	FuelPricePerLitres float64 `json:"fuel_price_per_litres"`
+	TotalLitres        float64 `json:"total_litres"`
+	TotalPrice         float64 `json:"total_price"`
 }
 
 /** ----------------------------------- */
@@ -70,4 +81,9 @@ type AddFuelToMotorcycle struct {
 	Username     string       `json:"username" validate:"required"`
 	LicensePlate string       `json:"license_plate" validate:"required"`
 	FuelSupplies FuelSupplies `json:"fuel_supplies" validate:"required"`
+}
+
+type GetMotorcycleByLicensePlate struct {
+	Username     string `json:"username" validate:"required"`
+	LicensePlate string `json:"license_plate" validate:"required"`
 }

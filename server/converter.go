@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	models2 "moto-management-server/business_logic/models"
 	"moto-management-server/server/models"
 	"time"
@@ -67,38 +66,43 @@ func fromBlMotorcyclesToServerMotorcycles(blMotorcycles []models2.Motorcycle) []
 	if blMotorcycles != nil && len(blMotorcycles) > 0 {
 		serverMotorcycles := make([]models.Motorcycle, 0)
 		for _, mt := range blMotorcycles {
-			serverMotorcycles = append(serverMotorcycles, models.Motorcycle{
-				ID:           mt.ID,
-				LicensePlate: mt.LicensePlate,
-				MotorcycleDataSheet: models.MotorcycleDataSheet{
-					Name:               mt.MotorcycleDataSheet.Name,
-					Model:              mt.MotorcycleDataSheet.Model,
-					ModelYear:          mt.MotorcycleDataSheet.ModelYear,
-					EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
-					TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
-					Kilometers:         mt.MotorcycleDataSheet.Kilometers,
-					Insurance: models.Insurance{
-						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
-						Company:    mt.MotorcycleDataSheet.Insurance.Company,
-						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney.AsMajorUnits(),
-						Currency:   mt.MotorcycleDataSheet.Insurance.Currency,
-						Details:    mt.MotorcycleDataSheet.Insurance.Details,
-						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt.String(),
-					},
-				},
-				FuelSupplies:   models.FuelSupplies{},
-				Service:        models.Service{},
-				Inspection:     models.Inspection{},
-				AccidentReport: models.AccidentReport{},
-				CreatedAt:      mt.CreatedAt,
-				UpdatedAt:      mt.UpdatedAt,
-			})
+			serverMotorcycles = append(serverMotorcycles, fromBlMotoToServerMoto(mt))
 		}
 
 		return serverMotorcycles
 	}
 	return nil
 }
+
+func fromBlMotoToServerMoto(mt models2.Motorcycle) models.Motorcycle {
+	return models.Motorcycle{
+		ID:           mt.ID,
+		LicensePlate: mt.LicensePlate,
+		MotorcycleDataSheet: models.MotorcycleDataSheet{
+			Name:               mt.MotorcycleDataSheet.Name,
+			Model:              mt.MotorcycleDataSheet.Model,
+			ModelYear:          mt.MotorcycleDataSheet.ModelYear,
+			EngineDisplacement: mt.MotorcycleDataSheet.EngineDisplacement,
+			TankCapacity:       mt.MotorcycleDataSheet.TankCapacity,
+			Kilometers:         mt.MotorcycleDataSheet.Kilometers,
+			Insurance: models.Insurance{
+				IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
+				Company:    mt.MotorcycleDataSheet.Insurance.Company,
+				PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney.AsMajorUnits(),
+				Currency:   mt.MotorcycleDataSheet.Insurance.Currency,
+				Details:    mt.MotorcycleDataSheet.Insurance.Details,
+				ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt.String(),
+			},
+		},
+		FuelSupplies:   models.FuelSupplies{},
+		Service:        models.Service{},
+		Inspection:     models.Inspection{},
+		AccidentReport: models.AccidentReport{},
+		CreatedAt:      mt.CreatedAt,
+		UpdatedAt:      mt.UpdatedAt,
+	}
+}
+
 func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle) []models2.Motorcycle {
 	if serverMotorcycles != nil && len(serverMotorcycles) > 0 {
 		blMotorcycles := make([]models2.Motorcycle, 0)
@@ -109,7 +113,7 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 			}
 			money := money2.NewFromFloat(mt.MotorcycleDataSheet.Insurance.PriceMoney, currency)
 			expireAt, _ := time.Parse(time.DateOnly, mt.MotorcycleDataSheet.Insurance.ExpireAt)
-			
+
 			blMt := models2.Motorcycle{
 				LicensePlate: mt.LicensePlate,
 				MotorcycleDataSheet: models2.MotorcycleDataSheet{

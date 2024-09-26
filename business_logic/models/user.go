@@ -18,3 +18,11 @@ type User struct {
 	IsLoggedIn  bool         `json:"is_logged_in"`
 	Motorcycles []Motorcycle `json:"motorcycles"`
 }
+
+func (u User) MergeMotorcyclesIDS(oldUser User) {
+	for index, newMt := range u.Motorcycles {
+		if oldMt := oldUser.Motorcycles[index]; oldMt.LicensePlate == newMt.LicensePlate {
+			u.Motorcycles[index].ID = oldMt.ID
+		}
+	}
+}

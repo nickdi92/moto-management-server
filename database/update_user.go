@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"moto-management-server/database/models"
 	"os"
 	"time"

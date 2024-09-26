@@ -30,6 +30,7 @@ func (s *MotoManagementServer) RegisterRoutes() {
 
 	privateRoutes["motorcycle/add"] = MotorcyclesAddRoute
 	privateRoutes["motorcycle/delete"] = MotorcyclesDeleteRoute
+	privateRoutes["motorcycle/getByLicensePlate"] = MotorcyclesGetByLicensePlateRoute
 
 	for url, routeHandler := range privateRoutes {
 		// Building url like /web/auth, /web/login
