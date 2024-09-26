@@ -8,7 +8,7 @@ import (
 )
 
 var GetUserRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
-	var getUser models.GetUserRoute
+	var getUser models.GetUserRequest
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal(body, &getUser)
 	validationErr := s.ValidateRequest(getUser)
@@ -30,5 +30,9 @@ var GetUserRoute = func(s *MotoManagementServer, writer http.ResponseWriter, req
 		return
 	}
 
-	s.HandleResponse(writer, fromBlUserToServerUser(user))
+	resp := models.GetUserResponse{
+		StatusCode: http.StatusOK,
+		User:       fromBlUserToServerUser(user),
+	}
+	s.HandleResponse(writer, resp)
 }

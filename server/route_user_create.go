@@ -11,14 +11,14 @@ import (
 	"strings"
 )
 
-var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
+var UserCreateRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
 	/**
 	* 1. Get username and password
 	* 2. Check if there isn't any other users with same username
 	* 3. Create New user with new jwt token
 	 */
 
-	var registerUserRequest models.RegisterUserRequest
+	var registerUserRequest models.CreateUserRequest
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal([]byte(body), &registerUserRequest)
 
@@ -59,11 +59,16 @@ var RegisterRoute = func(s *MotoManagementServer, writer http.ResponseWriter, re
 	newUser.Token = token.Token
 	newUser.ExpireAt = token.ExpiresAt
 
-	userCreated, userCreatedErr := s.businessLogic.CreateNewUser(newUser)
+	_, userCreatedErr := s.businessLogic.CreateNewUser(newUser)
 	if userCreatedErr != nil {
 		err := map[string]interface{}{"registerRouteErr": userCreatedErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
-	s.HandleResponse(writer, fromBlUserToUserRegisterRequest(userCreated))
+	response := models.CreateUserResponse{
+		StatusCode: http.StatusOK,
+		Token:      token.Token,
+		ExpireAt:   token.ExpiresAt,
+	}
+	s.HandleResponse(writer, response)
 }

@@ -3,12 +3,13 @@ package server
 import (
 	models2 "moto-management-server/business_logic/models"
 	"moto-management-server/server/models"
+	"net/http"
 	"time"
 
 	money2 "github.com/Rhymond/go-money"
 )
 
-func fromUserRegisterRequestToBlUser(registerUser models.RegisterUserRequest) models2.User {
+func fromUserRegisterRequestToBlUser(registerUser models.CreateUserRequest) models2.User {
 	return models2.User{
 		Username:   registerUser.Username,
 		Password:   registerUser.Password,
@@ -19,8 +20,8 @@ func fromUserRegisterRequestToBlUser(registerUser models.RegisterUserRequest) mo
 	}
 }
 
-func fromBlUserToUserRegisterRequest(blUser models2.User) models.RegisterUserRequest {
-	return models.RegisterUserRequest{
+func fromBlUserToUserRegisterRequest(blUser models2.User) models.CreateUserRequest {
+	return models.CreateUserRequest{
 		Username:   blUser.Username,
 		Password:   blUser.Password,
 		Email:      blUser.Email,
@@ -34,17 +35,7 @@ func fromBlUserToUserRegisterRequest(blUser models2.User) models.RegisterUserReq
 
 /********/
 
-func fromBlUserToUserLoginRequest(blUser models2.User) models.UserLoginRequest {
-	return models.UserLoginRequest{
-		Username:   blUser.Username,
-		Password:   blUser.Password,
-		Token:      blUser.Token,
-		ExpireAt:   blUser.ExpireAt,
-		IsLoggedIn: blUser.IsLoggedIn,
-	}
-}
-
-func fromServerMotorBikerToBlUSer(biker models.MotorBiker) models2.User {
+func fromServerMotorBikerToBlUSer(biker models.AddMotorcycleRequest) models2.User {
 	blMotorBiker := models2.User{
 		Username:    biker.Username,
 		Motorcycles: fromServerMotorcyclesToBlMotorcycles(biker.Motorcycles),
@@ -53,9 +44,9 @@ func fromServerMotorBikerToBlUSer(biker models.MotorBiker) models2.User {
 	return blMotorBiker
 }
 
-func fromBlMotorBikerToServerMotorBiker(biker models2.User) models.MotorBiker {
-	serverBiker := models.MotorBiker{
-		Username:    biker.Username,
+func fromBlMotorBikerToServerMotorBiker(biker models2.User) models.AddMotorcycleResponse {
+	serverBiker := models.AddMotorcycleResponse{
+		StatusCode:  http.StatusOK,
 		Motorcycles: fromBlMotorcyclesToServerMotorcycles(biker.Motorcycles),
 	}
 
@@ -63,7 +54,7 @@ func fromBlMotorBikerToServerMotorBiker(biker models2.User) models.MotorBiker {
 }
 
 func fromBlMotorcyclesToServerMotorcycles(blMotorcycles []models2.Motorcycle) []models.Motorcycle {
-	if blMotorcycles != nil && len(blMotorcycles) > 0 {
+	if blMotorcycles != nil {
 		serverMotorcycles := make([]models.Motorcycle, 0)
 		for _, mt := range blMotorcycles {
 			serverMotorcycles = append(serverMotorcycles, fromBlMotoToServerMoto(mt))
@@ -75,6 +66,9 @@ func fromBlMotorcyclesToServerMotorcycles(blMotorcycles []models2.Motorcycle) []
 }
 
 func fromBlMotoToServerMoto(mt models2.Motorcycle) models.Motorcycle {
+	if mt.LicensePlate == "" {
+		return models.Motorcycle{}
+	}
 	return models.Motorcycle{
 		ID:           mt.ID,
 		LicensePlate: mt.LicensePlate,
@@ -104,7 +98,7 @@ func fromBlMotoToServerMoto(mt models2.Motorcycle) models.Motorcycle {
 }
 
 func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle) []models2.Motorcycle {
-	if serverMotorcycles != nil && len(serverMotorcycles) > 0 {
+	if serverMotorcycles != nil {
 		blMotorcycles := make([]models2.Motorcycle, 0)
 		for _, mt := range serverMotorcycles {
 			currency := mt.MotorcycleDataSheet.Insurance.Currency

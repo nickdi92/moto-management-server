@@ -9,14 +9,14 @@ import (
 	"strings"
 )
 
-var TokenRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
+var RefreshTokenRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
 	var tokenRequest models.TokenRequest
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal([]byte(body), &tokenRequest)
 
 	validationErr := s.ValidateRequest(tokenRequest)
 	if validationErr != nil {
-		err := map[string]interface{}{"registerRouteErr": validationErr.Error()}
+		err := map[string]interface{}{"RefreshTokenRoute": validationErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
@@ -28,7 +28,7 @@ var TokenRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 
 	blUser, err := s.businessLogic.GetUserByUsername(tokenRequest.Username)
 	if err != nil {
-		err := map[string]interface{}{"registerRouteErr": err.Error()}
+		err := map[string]interface{}{"RefreshTokenRoute": err.Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
@@ -38,14 +38,15 @@ var TokenRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 
 	_, updateErr := s.businessLogic.UpdateUser(blUser)
 	if updateErr != nil {
-		err := map[string]interface{}{"registerRouteErr": updateErr.Error()}
+		err := map[string]interface{}{"RefreshTokenRoute": updateErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
 	tokenResp := models.TokenResponse{
-		Token:    token.Token,
-		ExpireAt: token.ExpiresAt,
+		StatusCode: http.StatusOK,
+		Token:      token.Token,
+		ExpireAt:   token.ExpiresAt,
 	}
 
 	s.HandleResponse(writer, tokenResp)

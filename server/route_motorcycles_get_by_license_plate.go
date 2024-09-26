@@ -8,7 +8,7 @@ import (
 )
 
 var MotorcyclesGetByLicensePlateRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
-	var getMotoInfo models.GetMotorcycleByLicensePlate
+	var getMotoInfo models.GetMotorcycleByLicensePlateRequest
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal(body, &getMotoInfo)
 
@@ -31,5 +31,9 @@ var MotorcyclesGetByLicensePlateRoute = func(s *MotoManagementServer, writer htt
 		return
 	}
 
-	s.HandleResponse(writer, fromBlMotoToServerMoto(motorcycle))
+	response := models.GetMotorcycleByLicensePlateResponse{
+		StatusCode: http.StatusOK,
+		Motorcycle: fromBlMotoToServerMoto(motorcycle),
+	}
+	s.HandleResponse(writer, response)
 }

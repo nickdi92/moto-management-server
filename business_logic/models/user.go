@@ -20,6 +20,9 @@ type User struct {
 }
 
 func (u User) MergeMotorcyclesIDS(oldUser User) {
+	if oldUser.Motorcycles == nil || len(oldUser.Motorcycles) == 0 {
+		return
+	}
 	for index, newMt := range u.Motorcycles {
 		if oldMt := oldUser.Motorcycles[index]; oldMt.LicensePlate == newMt.LicensePlate {
 			u.Motorcycles[index].ID = oldMt.ID

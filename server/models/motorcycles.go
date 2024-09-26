@@ -49,11 +49,6 @@ type Inspection struct{}
 
 type AccidentReport struct{}
 
-type MotorBiker struct {
-	Username    string       `json:"username" validate:"required"`
-	Motorcycles []Motorcycle `json:"motorcycles" validate:"required"`
-}
-
 type PetrolStation struct {
 	Name               string  `json:"name"`
 	Street             string  `json:"street"`
@@ -64,26 +59,4 @@ type PetrolStation struct {
 	FuelPricePerLitres float64 `json:"fuel_price_per_litres"`
 	TotalLitres        float64 `json:"total_litres"`
 	TotalPrice         float64 `json:"total_price"`
-}
-
-/** ----------------------------------- */
-
-type DeleteMotorcycle struct {
-	Username     string `json:"username" validate:"required"`
-	LicensePlate string `json:"license_plate" validate:"required"`
-}
-
-type DeleteMotorcycleResponse struct {
-	IsDeleted bool `json:"is_deleted"`
-}
-
-type AddFuelToMotorcycle struct {
-	Username     string       `json:"username" validate:"required"`
-	LicensePlate string       `json:"license_plate" validate:"required"`
-	FuelSupplies FuelSupplies `json:"fuel_supplies" validate:"required"`
-}
-
-type GetMotorcycleByLicensePlate struct {
-	Username     string `json:"username" validate:"required"`
-	LicensePlate string `json:"license_plate" validate:"required"`
 }

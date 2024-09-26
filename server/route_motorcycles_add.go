@@ -8,7 +8,7 @@ import (
 )
 
 var MotorcyclesAddRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
-	var motorBiker models.MotorBiker
+	var motorBiker models.AddMotorcycleRequest
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal(body, &motorBiker)
 

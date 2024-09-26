@@ -19,8 +19,8 @@ func (s *MotoManagementServer) RegisterRoutes() {
 	 *					 USER ROUTES				  *
 	 *------------------------------------------------*/
 
-	privateRoutes["user/refresh-token"] = TokenRoute
-	privateRoutes["user/create"] = RegisterRoute
+	privateRoutes["user/refresh-token"] = RefreshTokenRoute
+	privateRoutes["user/create"] = UserCreateRoute
 	privateRoutes["user/login"] = LoginRoute
 	privateRoutes["user/get"] = GetUserRoute
 

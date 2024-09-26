@@ -56,5 +56,10 @@ var LoginRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 		return
 	}
 
-	s.HandleResponse(writer, fromBlUserToUserLoginRequest(user))
+	s.HandleResponse(writer, models.UserLoginResponse{
+		StatusCode: http.StatusOK,
+		Token:      user.Token,
+		ExpireAt:   user.ExpireAt,
+		IsLoggedIn: user.IsLoggedIn,
+	})
 }

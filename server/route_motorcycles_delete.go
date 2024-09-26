@@ -8,7 +8,7 @@ import (
 )
 
 var MotorcyclesDeleteRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
-	var deleteMotorcycle models.DeleteMotorcycle
+	var deleteMotorcycle models.DeleteMotorcycleRequest
 	body, _ := io.ReadAll(request.Body)
 	_ = json.Unmarshal(body, &deleteMotorcycle)
 
@@ -31,5 +31,5 @@ var MotorcyclesDeleteRoute = func(s *MotoManagementServer, writer http.ResponseW
 		return
 	}
 
-	s.HandleResponse(writer, models.DeleteMotorcycleResponse{IsDeleted: isDeleted})
+	s.HandleResponse(writer, models.DeleteMotorcycleResponse{StatusCode: http.StatusOK, IsDeleted: isDeleted})
 }
