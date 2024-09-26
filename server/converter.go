@@ -1,9 +1,12 @@
 package server
 
 import (
-	money2 "github.com/Rhymond/go-money"
+	"fmt"
 	models2 "moto-management-server/business_logic/models"
 	"moto-management-server/server/models"
+	"time"
+
+	money2 "github.com/Rhymond/go-money"
 )
 
 func fromUserRegisterRequestToBlUser(registerUser models.RegisterUserRequest) models2.User {
@@ -80,7 +83,7 @@ func fromBlMotorcyclesToServerMotorcycles(blMotorcycles []models2.Motorcycle) []
 						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney.AsMajorUnits(),
 						Currency:   mt.MotorcycleDataSheet.Insurance.Currency,
 						Details:    mt.MotorcycleDataSheet.Insurance.Details,
-						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
+						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt.String(),
 					},
 				},
 				FuelSupplies:   models.FuelSupplies{},
@@ -105,8 +108,9 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 				currency = money2.EUR
 			}
 			money := money2.NewFromFloat(mt.MotorcycleDataSheet.Insurance.PriceMoney, currency)
-			blMotorcycles = append(blMotorcycles, models2.Motorcycle{
-				ID:           mt.ID,
+			expireAt, _ := time.Parse(time.DateOnly, mt.MotorcycleDataSheet.Insurance.ExpireAt)
+			
+			blMt := models2.Motorcycle{
 				LicensePlate: mt.LicensePlate,
 				MotorcycleDataSheet: models2.MotorcycleDataSheet{
 					Name:               mt.MotorcycleDataSheet.Name,
@@ -120,7 +124,7 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 						Company:    mt.MotorcycleDataSheet.Insurance.Company,
 						PriceMoney: money,
 						Details:    mt.MotorcycleDataSheet.Insurance.Details,
-						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
+						ExpireAt:   &expireAt,
 					},
 				},
 				FuelSupplies:   models2.FuelSupplies{},
@@ -129,7 +133,12 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 				AccidentReport: models2.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
 				UpdatedAt:      mt.UpdatedAt,
-			})
+			}
+			if mt.ID != "" {
+				blMt.ID = mt.ID
+			}
+
+			blMotorcycles = append(blMotorcycles, blMt)
 		}
 
 		return blMotorcycles

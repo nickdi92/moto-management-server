@@ -2,10 +2,12 @@ package models
 
 import (
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Motorcycle struct {
-	ID                  string              `json:"id"`
+	ID                  primitive.ObjectID  `json:"id" bson:"id"`
 	LicensePlate        string              `json:"license_plate" bson:"license_plate"` // Targa
 	MotorcycleDataSheet MotorcycleDataSheet `json:"motorcycle_data_sheet" bson:"motorcycle_data_sheet"`
 	FuelSupplies        FuelSupplies        `json:"fuel_supplies" bson:"fuel_supplies"`     // @TODO Gestione rifornimenti

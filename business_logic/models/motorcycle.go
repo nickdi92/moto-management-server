@@ -27,7 +27,9 @@ type MotorcycleDataSheet struct {
 	Insurance          Insurance `json:"insurance"` // Assicurazione
 }
 
-type FuelSupplies struct{}
+type FuelSupplies struct{
+	
+}
 
 type Insurance struct {
 	IsActive   bool         `json:"is_active"`

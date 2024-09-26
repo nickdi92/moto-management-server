@@ -2,11 +2,13 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"moto-management-server/database/models"
 	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (m *MotoManagementMongoClient) UpdateUser(userToUpdate models.User) (models.User, error) {
@@ -33,6 +35,11 @@ func (m *MotoManagementMongoClient) UpdateUser(userToUpdate models.User) (models
 	}
 
 	if userToUpdate.Motorcycles != nil {
+		for index, mt := range userToUpdate.Motorcycles {
+			if mt.ID.IsZero() {
+				userToUpdate.Motorcycles[index].ID = primitive.NewObjectID()
+			}
+		}
 		updateSingleFields["motorcycles"] = userToUpdate.Motorcycles
 	}
 

@@ -1,9 +1,10 @@
 package business_logic
 
 import (
-	money2 "github.com/Rhymond/go-money"
 	"moto-management-server/business_logic/models"
 	models2 "moto-management-server/database/models"
+
+	money2 "github.com/Rhymond/go-money"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -58,8 +59,7 @@ func fromBlMotorcyclesToMongoMotorcycles(blMotorcycles []models.Motorcycle) []mo
 	if blMotorcycles != nil {
 		mongoMotorcycles := make([]models2.Motorcycle, 0)
 		for _, mt := range blMotorcycles {
-			mongoMotorcycles = append(mongoMotorcycles, models2.Motorcycle{
-				ID:           mt.ID,
+			mongoMt := models2.Motorcycle{
 				LicensePlate: mt.LicensePlate,
 				MotorcycleDataSheet: models2.MotorcycleDataSheet{
 					Name:               mt.MotorcycleDataSheet.Name,
@@ -83,7 +83,12 @@ func fromBlMotorcyclesToMongoMotorcycles(blMotorcycles []models.Motorcycle) []mo
 				AccidentReport: models2.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
 				UpdatedAt:      mt.UpdatedAt,
-			})
+			}
+			if mt.ID != "" {
+				mongoId, _ := primitive.ObjectIDFromHex(mt.ID)
+				mongoMt.ID = mongoId
+			}
+			mongoMotorcycles = append(mongoMotorcycles, mongoMt)
 		}
 
 		return mongoMotorcycles
@@ -97,7 +102,7 @@ func fromMongoMotorcyclesToBlMotorcycles(mongoMotorcycles []models2.Motorcycle) 
 		for _, mt := range mongoMotorcycles {
 			money := money2.NewFromFloat(mt.MotorcycleDataSheet.Insurance.PriceMoney, mt.MotorcycleDataSheet.Insurance.Currency)
 			blMotorcycles = append(blMotorcycles, models.Motorcycle{
-				ID:           mt.ID,
+				ID:           mt.ID.Hex(),
 				LicensePlate: mt.LicensePlate,
 				MotorcycleDataSheet: models.MotorcycleDataSheet{
 					Name:               mt.MotorcycleDataSheet.Name,

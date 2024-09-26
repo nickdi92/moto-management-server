@@ -28,15 +28,16 @@ type MotorcycleDataSheet struct {
 
 type FuelSupplies struct {
 	PetrolStation PetrolStation `json:"location"`
+	CreatedAt     *time.Time    `json:"json"`
 }
 
 type Insurance struct {
-	IsActive   bool       `json:"is_active"`
-	Company    string     `json:"company"`
-	PriceMoney float64    `json:"price_money"`
-	Currency   string     `json:"currency"`
-	Details    string     `json:"details"`
-	ExpireAt   *time.Time `json:"expire_at"`
+	IsActive   bool    `json:"is_active"`
+	Company    string  `json:"company"`
+	PriceMoney float64 `json:"price_money"`
+	Currency   string  `json:"currency"`
+	Details    string  `json:"details"`
+	ExpireAt   string  `json:"expire_at"`
 }
 
 type Service struct{}
@@ -63,4 +64,10 @@ type DeleteMotorcycle struct {
 
 type DeleteMotorcycleResponse struct {
 	IsDeleted bool `json:"is_deleted"`
+}
+
+type AddFuelToMotorcycle struct {
+	Username     string       `json:"username" validate:"required"`
+	LicensePlate string       `json:"license_plate" validate:"required"`
+	FuelSupplies FuelSupplies `json:"fuel_supplies" validate:"required"`
 }
