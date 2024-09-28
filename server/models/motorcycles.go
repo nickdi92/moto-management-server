@@ -27,11 +27,9 @@ type MotorcycleDataSheet struct {
 }
 
 type FuelSupplies struct {
-	Username      string        `json:"username" validate:"required"`
-	LicensePlate  string        `json:"license_plate" validate:"required"`
-	PetrolStation PetrolStation `json:"location"`
+	PetrolStation PetrolStation `json:"petrol_station"`
 	FullFuel      bool          `json:"full_fuel"`
-	CreatedAt     *time.Time    `json:"json"`
+	CreatedAt     string        `json:"created_at"`
 }
 
 type Insurance struct {

@@ -16,6 +16,7 @@ type BusinessLogicInterface interface {
 
 	DeleteMotorbike(username string, licensePlate string) (bool, error)
 	GetMotorcycleByLicensePlate(username string, licensePlate string) (models.Motorcycle, error)
+	AddFuelToMotorcycle(username string, licensePlate string, fuel models.FuelSupplies) (models.Motorcycle, error)
 }
 
 func (b *BusinessLogic) NewBusinessLogic() *BusinessLogic {

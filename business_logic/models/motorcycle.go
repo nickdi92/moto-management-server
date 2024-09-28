@@ -1,18 +1,24 @@
 package models
 
 import (
-	"github.com/Rhymond/go-money"
 	"time"
+
+	"github.com/govalues/money"
 )
+
+type FuelType string
+
+const FuelType_Gasoline = "gasoline"
+const FuelType_Diesel = "diesel"
 
 type Motorcycle struct {
 	ID                  string              `json:"id"`
 	LicensePlate        string              `json:"license_plate"` // Targa
 	MotorcycleDataSheet MotorcycleDataSheet `json:"motorcycle_data_sheet"`
-	FuelSupplies        FuelSupplies        `json:"fuel_supplies"`   // @TODO Gestione rifornimenti
-	Service             Service             `json:"service"`         // @TODO Gestione tagliandi
-	Inspection          Inspection          `json:"inspection"`      // @TODO Gestione Revisioni
-	AccidentReport      AccidentReport      `json:"accident_report"` // @TODO Gestione Incidenti
+	FuelSupplies        []FuelSupplies      `json:"fuel_supplies"`   // @TODO Gestione rifornimenti
+	Service             []Service           `json:"service"`         // @TODO Gestione tagliandi
+	Inspection          []Inspection        `json:"inspection"`      // @TODO Gestione Revisioni
+	AccidentReport      []AccidentReport    `json:"accident_report"` // @TODO Gestione Incidenti
 	CreatedAt           *time.Time          `json:"created_at"`
 	UpdatedAt           *time.Time          `json:"updated_at"`
 }
@@ -27,14 +33,28 @@ type MotorcycleDataSheet struct {
 	Insurance          Insurance `json:"insurance"` // Assicurazione
 }
 
-type FuelSupplies struct{
-	
+type FuelSupplies struct {
+	PetrolStation PetrolStation `json:"location"`
+	FullFuel      bool          `json:"full_fuel"`
+	CreatedAt     *time.Time    `json:"json"`
+}
+
+type PetrolStation struct {
+	Name               string       `json:"name"`
+	Street             string       `json:"street"`
+	City               string       `json:"city"`
+	Province           string       `json:"province"`
+	State              string       `json:"state"`
+	FuelType           FuelType     `json:"fuel_type"`
+	FuelPricePerLitres money.Amount `json:"fuel_price_per_litres"`
+	TotalLitres        float64      `json:"total_litres"`
+	TotalPrice         money.Amount `json:"total_price"`
 }
 
 type Insurance struct {
 	IsActive   bool         `json:"is_active"`
 	Company    string       `json:"company"`
-	PriceMoney *money.Money `json:"price_money"`
+	PriceMoney money.Amount `json:"price_money"`
 	Currency   string       `json:"currency"`
 	Details    string       `json:"details"`
 	ExpireAt   *time.Time   `json:"expire_at"`

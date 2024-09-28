@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	money2 "github.com/Rhymond/go-money"
+	money2 "github.com/govalues/money"
 )
 
 func fromUserRegisterRequestToBlUser(registerUser models.CreateUserRequest) models2.User {
@@ -69,6 +69,7 @@ func fromBlMotoToServerMoto(mt models2.Motorcycle) models.Motorcycle {
 	if mt.LicensePlate == "" {
 		return models.Motorcycle{}
 	}
+	priceMoney, _ := mt.MotorcycleDataSheet.Insurance.PriceMoney.Float64()
 	return models.Motorcycle{
 		ID:           mt.ID,
 		LicensePlate: mt.LicensePlate,
@@ -82,7 +83,7 @@ func fromBlMotoToServerMoto(mt models2.Motorcycle) models.Motorcycle {
 			Insurance: models.Insurance{
 				IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
 				Company:    mt.MotorcycleDataSheet.Insurance.Company,
-				PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney.AsMajorUnits(),
+				PriceMoney: priceMoney,
 				Currency:   mt.MotorcycleDataSheet.Insurance.Currency,
 				Details:    mt.MotorcycleDataSheet.Insurance.Details,
 				ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt.String(),
@@ -103,9 +104,10 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 		for _, mt := range serverMotorcycles {
 			currency := mt.MotorcycleDataSheet.Insurance.Currency
 			if currency == "" {
-				currency = money2.EUR
+				currency = money2.EUR.Code()
 			}
-			money := money2.NewFromFloat(mt.MotorcycleDataSheet.Insurance.PriceMoney, currency)
+
+			money, _ := money2.NewAmountFromFloat64(currency, mt.MotorcycleDataSheet.Insurance.PriceMoney)
 			expireAt, _ := time.Parse(time.DateOnly, mt.MotorcycleDataSheet.Insurance.ExpireAt)
 
 			blMt := models2.Motorcycle{
@@ -125,10 +127,10 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 						ExpireAt:   &expireAt,
 					},
 				},
-				FuelSupplies:   models2.FuelSupplies{},
-				Service:        models2.Service{},
-				Inspection:     models2.Inspection{},
-				AccidentReport: models2.AccidentReport{},
+				FuelSupplies:   []models2.FuelSupplies{},
+				Service:        []models2.Service{},
+				Inspection:     []models2.Inspection{},
+				AccidentReport: []models2.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
 				UpdatedAt:      mt.UpdatedAt,
 			}

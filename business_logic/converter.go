@@ -4,8 +4,8 @@ import (
 	"moto-management-server/business_logic/models"
 	models2 "moto-management-server/database/models"
 
-	money2 "github.com/Rhymond/go-money"
-
+	"github.com/govalues/money"
+	money2 "github.com/govalues/money"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -28,7 +28,6 @@ func fromMongoUserToBlUser(mongoUser models2.User) models.User {
 		IsLoggedIn:  mongoUser.IsLoggedIn,
 		Motorcycles: fromMongoMotorcyclesToBlMotorcycles(mongoUser.Motorcycles),
 	}
-
 	return blUser
 }
 
@@ -59,6 +58,7 @@ func fromBlMotorcyclesToMongoMotorcycles(blMotorcycles []models.Motorcycle) []mo
 	if blMotorcycles != nil {
 		mongoMotorcycles := make([]models2.Motorcycle, 0)
 		for _, mt := range blMotorcycles {
+			priceMoney, _ := mt.MotorcycleDataSheet.Insurance.PriceMoney.Float64()
 			mongoMt := models2.Motorcycle{
 				LicensePlate: mt.LicensePlate,
 				MotorcycleDataSheet: models2.MotorcycleDataSheet{
@@ -71,19 +71,20 @@ func fromBlMotorcyclesToMongoMotorcycles(blMotorcycles []models.Motorcycle) []mo
 					Insurance: models2.Insurance{
 						IsActive:   mt.MotorcycleDataSheet.Insurance.IsActive,
 						Company:    mt.MotorcycleDataSheet.Insurance.Company,
-						PriceMoney: mt.MotorcycleDataSheet.Insurance.PriceMoney.AsMajorUnits(),
-						Currency:   mt.MotorcycleDataSheet.Insurance.PriceMoney.Currency().Code,
+						PriceMoney: priceMoney,
+						Currency:   mt.MotorcycleDataSheet.Insurance.PriceMoney.Curr().Code(),
 						Details:    mt.MotorcycleDataSheet.Insurance.Details,
 						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
 					},
 				},
-				FuelSupplies:   models2.FuelSupplies{},
-				Service:        models2.Service{},
-				Inspection:     models2.Inspection{},
-				AccidentReport: models2.AccidentReport{},
+				FuelSupplies:   fromBlFuelsSuppliesToMongoFuelsSupplies(mt.FuelSupplies),
+				Service:        []models2.Service{},
+				Inspection:     []models2.Inspection{},
+				AccidentReport: []models2.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
 				UpdatedAt:      mt.UpdatedAt,
 			}
+
 			if mt.ID != "" {
 				mongoId, _ := primitive.ObjectIDFromHex(mt.ID)
 				mongoMt.ID = mongoId
@@ -100,7 +101,7 @@ func fromMongoMotorcyclesToBlMotorcycles(mongoMotorcycles []models2.Motorcycle) 
 	if mongoMotorcycles != nil {
 		blMotorcycles := make([]models.Motorcycle, 0)
 		for _, mt := range mongoMotorcycles {
-			money := money2.NewFromFloat(mt.MotorcycleDataSheet.Insurance.PriceMoney, mt.MotorcycleDataSheet.Insurance.Currency)
+			money, _ := money2.NewAmountFromFloat64(mt.MotorcycleDataSheet.Insurance.Currency, mt.MotorcycleDataSheet.Insurance.PriceMoney)
 			blMotorcycles = append(blMotorcycles, models.Motorcycle{
 				ID:           mt.ID.Hex(),
 				LicensePlate: mt.LicensePlate,
@@ -120,10 +121,10 @@ func fromMongoMotorcyclesToBlMotorcycles(mongoMotorcycles []models2.Motorcycle) 
 						ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt,
 					},
 				},
-				FuelSupplies:   models.FuelSupplies{},
-				Service:        models.Service{},
-				Inspection:     models.Inspection{},
-				AccidentReport: models.AccidentReport{},
+				FuelSupplies:   fromMongoFuelSuppliesToBlFuelSupplies(mt.FuelSupplies),
+				Service:        []models.Service{},
+				Inspection:     []models.Inspection{},
+				AccidentReport: []models.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
 				UpdatedAt:      mt.UpdatedAt,
 			})
@@ -132,4 +133,36 @@ func fromMongoMotorcyclesToBlMotorcycles(mongoMotorcycles []models2.Motorcycle) 
 		return blMotorcycles
 	}
 	return nil
+}
+
+func fromBlFuelsSuppliesToMongoFuelsSupplies(blFuels []models.FuelSupplies) []models2.FuelSupplies {
+	mongoFuels := make([]models2.FuelSupplies, 0)
+	for _, f := range blFuels {
+		mongoFuels = append(mongoFuels, f.ToMongoFuelSupplies())
+	}
+	return mongoFuels
+}
+
+func fromMongoFuelSuppliesToBlFuelSupplies(mongoFuels []models2.FuelSupplies) []models.FuelSupplies {
+	blFuels := make([]models.FuelSupplies, 0)
+	for _, mongoFuel := range mongoFuels {
+		pricePerLitres, _ := money.NewAmountFromFloat64(money.EUR.Code(), mongoFuel.PetrolStation.FuelPricePerLitres)
+		totalPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), mongoFuel.PetrolStation.TotalPrice)
+		blFuels = append(blFuels, models.FuelSupplies{
+			PetrolStation: models.PetrolStation{
+				Name:               mongoFuel.PetrolStation.Name,
+				Street:             mongoFuel.PetrolStation.Street,
+				City:               mongoFuel.PetrolStation.City,
+				Province:           mongoFuel.PetrolStation.Province,
+				State:              mongoFuel.PetrolStation.State,
+				FuelType:           models.FuelType(mongoFuel.PetrolStation.FuelType),
+				FuelPricePerLitres: pricePerLitres,
+				TotalLitres:        mongoFuel.PetrolStation.TotalLitres,
+				TotalPrice:         totalPrice,
+			},
+			FullFuel:  mongoFuel.FullFuel,
+			CreatedAt: mongoFuel.CreatedAt,
+		})
+	}
+	return blFuels
 }
