@@ -149,6 +149,7 @@ func fromMongoFuelSuppliesToBlFuelSupplies(mongoFuels []models2.FuelSupplies) []
 		pricePerLitres, _ := money.NewAmountFromFloat64(money.EUR.Code(), mongoFuel.PetrolStation.FuelPricePerLitres)
 		totalPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), mongoFuel.PetrolStation.TotalPrice)
 		blFuels = append(blFuels, models.FuelSupplies{
+			ID: mongoFuel.ID.Hex(),
 			PetrolStation: models.PetrolStation{
 				Name:               mongoFuel.PetrolStation.Name,
 				Street:             mongoFuel.PetrolStation.Street,

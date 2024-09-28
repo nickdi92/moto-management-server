@@ -29,9 +29,10 @@ type MotorcycleDataSheet struct {
 }
 
 type FuelSupplies struct {
-	PetrolStation PetrolStation `json:"location" bson:"pertrol_station"`
-	FullFuel      bool          `json:"full_fuel" bson:"full_fuel"`
-	CreatedAt     *time.Time    `json:"json" bson:"created_at"`
+	ID            primitive.ObjectID `json:"id" bson:"id"`
+	PetrolStation PetrolStation      `json:"location" bson:"pertrol_station"`
+	FullFuel      bool               `json:"full_fuel" bson:"full_fuel"`
+	CreatedAt     *time.Time         `json:"json" bson:"created_at"`
 }
 
 type PetrolStation struct {

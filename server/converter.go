@@ -89,10 +89,10 @@ func fromBlMotoToServerMoto(mt models2.Motorcycle) models.Motorcycle {
 				ExpireAt:   mt.MotorcycleDataSheet.Insurance.ExpireAt.String(),
 			},
 		},
-		FuelSupplies:   models.FuelSupplies{},
-		Service:        models.Service{},
-		Inspection:     models.Inspection{},
-		AccidentReport: models.AccidentReport{},
+		FuelSupplies:   fromBlFuelSuppliesToServerFuelSupplies(mt.FuelSupplies),
+		Service:        []models.Service{},
+		Inspection:     []models.Inspection{},
+		AccidentReport: []models.AccidentReport{},
 		CreatedAt:      mt.CreatedAt,
 		UpdatedAt:      mt.UpdatedAt,
 	}
@@ -158,4 +158,14 @@ func fromBlUserToServerUser(blUser models2.User) models.User {
 		IsLoggedIn:  blUser.IsLoggedIn,
 		Motorcycles: fromBlMotorcyclesToServerMotorcycles(blUser.Motorcycles),
 	}
+}
+
+
+func fromBlFuelSuppliesToServerFuelSupplies(blFuel []models2.FuelSupplies) []models.FuelSupplies {
+	serverFuels := make([]models.FuelSupplies, 0)
+	for _, bf := range blFuel {
+		var sf models.FuelSupplies
+		serverFuels = append(serverFuels, sf.ToServerModel(bf))
+	}
+	return serverFuels
 }

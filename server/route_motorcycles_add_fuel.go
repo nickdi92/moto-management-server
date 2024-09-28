@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"moto-management-server/server/models"
 	"net/http"
@@ -35,6 +36,9 @@ var MotorcyclesAddFuelRoute = func(s *MotoManagementServer, writer http.Response
 		s.HandleRouteError(writer, respErr, http.StatusInternalServerError)
 		return
 	}
+
+	jsM, _ := json.Marshal(motorcycle)
+	fmt.Println(fmt.Sprintf("moto update: %s", jsM))
 
 	s.HandleResponse(writer, models.AddFuelToMotorcycleResponse{
 		StatusCode: http.StatusOK,

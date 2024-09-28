@@ -11,6 +11,7 @@ func (ft FuelType) ToString() string {
 func (f FuelSupplies) ToMongoFuelSupplies() models.FuelSupplies {
 	floatFuelPricePerLitres, _ := f.PetrolStation.FuelPricePerLitres.Float64()
 	floatFuelTotalPrice, _ := f.PetrolStation.TotalPrice.Float64()
+
 	return models.FuelSupplies{
 		PetrolStation: models.PetrolStation{
 			Name:               f.PetrolStation.Name,

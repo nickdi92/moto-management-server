@@ -50,3 +50,9 @@ type UserLoginRequest struct {
 type GetUserRequest struct {
 	Username string `json:"username" validate:"required"`
 }
+
+type AddServiceToMotorcycleRequest struct {
+	Username     string  `json:"username" validate:"required"`
+	LicensePlate string  `json:"license_plate" validate:"required"`
+	Service      Service `json:"service" validate:"required"`
+}

@@ -4,14 +4,15 @@ import (
 	"time"
 )
 
+// Structs
 type Motorcycle struct {
 	ID                  string              `json:"id"`
 	LicensePlate        string              `json:"license_plate" validate:"required"` // Targa
 	MotorcycleDataSheet MotorcycleDataSheet `json:"motorcycle_data_sheet" validate:"required"`
-	FuelSupplies        FuelSupplies        `json:"fuel_supplies"`   // @TODO Gestione rifornimenti
-	Service             Service             `json:"service"`         // @TODO Gestione tagliandi
-	Inspection          Inspection          `json:"inspection"`      // @TODO Gestione Revisioni
-	AccidentReport      AccidentReport      `json:"accident_report"` // @TODO Gestione Incidenti
+	FuelSupplies        []FuelSupplies      `json:"fuel_supplies"`   // @TODO Gestione rifornimenti
+	Service             []Service           `json:"service"`         // @TODO Gestione tagliandi
+	Inspection          []Inspection        `json:"inspection"`      // @TODO Gestione Revisioni
+	AccidentReport      []AccidentReport    `json:"accident_report"` // @TODO Gestione Incidenti
 	CreatedAt           *time.Time          `json:"created_at"`
 	UpdatedAt           *time.Time          `json:"updated_at"`
 }
@@ -27,6 +28,7 @@ type MotorcycleDataSheet struct {
 }
 
 type FuelSupplies struct {
+	ID            string        `json:"id" validate:"omitempty"`
 	PetrolStation PetrolStation `json:"petrol_station"`
 	FullFuel      bool          `json:"full_fuel"`
 	CreatedAt     string        `json:"created_at"`
@@ -41,7 +43,8 @@ type Insurance struct {
 	ExpireAt   string  `json:"expire_at"`
 }
 
-type Service struct{}
+type Service struct {
+}
 
 type Inspection struct{}
 

@@ -34,6 +34,7 @@ type MotorcycleDataSheet struct {
 }
 
 type FuelSupplies struct {
+	ID            string        `json:"id"`
 	PetrolStation PetrolStation `json:"location"`
 	FullFuel      bool          `json:"full_fuel"`
 	CreatedAt     *time.Time    `json:"json"`
