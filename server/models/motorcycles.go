@@ -44,6 +44,7 @@ type Insurance struct {
 }
 
 type Service struct {
+	ID              string        `json:"id"`
 	Name            string        `json:"name"`
 	LocationAddress Address       `json:"address"`
 	ListOfDones     []ListOfDones `json:"list_of_dones"`

@@ -37,7 +37,7 @@ var LoginRoute = func(s *MotoManagementServer, writer http.ResponseWriter, reque
 	}
 
 	token := s.token.NewToken(userLogin.Username, userLogin.Password)
-	token.Token = jwtToken[len("Bearer "):]
+	token.Token = jwtToken
 	validateErr := token.ValidateToken(user.Token)
 	if validateErr != nil {
 		err := map[string]interface{}{"loginRouteErr": validateErr.Error()}

@@ -13,7 +13,6 @@ func (b *BusinessLogic) UpdateUser(user models.User) (models.User, error) {
 	user.ID = blUser.ID
 
 	user.MergeMotorcyclesIDS(blUser)
-
 	newUser, newUserErr := b.mongoClient.UpdateUser(fromBlUserToMongoUser(user))
 	if newUserErr != nil {
 		return models.User{}, newUserErr

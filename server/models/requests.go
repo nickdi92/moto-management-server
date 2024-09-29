@@ -78,3 +78,9 @@ type AddServiceToMotorcycleRequest struct {
 	LicensePlate string  `json:"license_plate" validate:"required"`
 	Service      Service `json:"service" validate:"required"`
 }
+
+type DeleteServiceRequest struct {
+	Username     string `json:"username" validate:"required"`
+	LicensePlate string `json:"license_plate" validate:"required"`
+	ServiceId    string `json:"service_id"`
+}

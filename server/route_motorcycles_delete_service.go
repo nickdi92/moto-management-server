@@ -8,14 +8,14 @@ import (
 	"net/http"
 )
 
-var MotorcyclesAddServiceRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
-	var serviceToAdd models.AddServiceToMotorcycleRequest
+var MotorcyclesDeleteServiceRoute = func(s *MotoManagementServer, writer http.ResponseWriter, request *http.Request) {
+	var serviceToRemove models.DeleteServiceRequest
 	body, _ := io.ReadAll(request.Body)
-	_ = json.Unmarshal(body, &serviceToAdd)
+	_ = json.Unmarshal(body, &serviceToRemove)
 
-	validationErr := s.ValidateRequest(serviceToAdd)
+	validationErr := s.ValidateRequest(serviceToRemove)
 	if validationErr != nil {
-		err := map[string]interface{}{"MotorcyclesAddServiceRoute": validationErr.Error()}
+		err := map[string]interface{}{"MotorcyclesDeleteServiceRoute": validationErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
@@ -25,34 +25,34 @@ var MotorcyclesAddServiceRoute = func(s *MotoManagementServer, writer http.Respo
 		return
 	}
 
-	gotUser, gotUserErr := s.businessLogic.GetUserByUsername(serviceToAdd.Username)
+	gotUser, gotUserErr := s.businessLogic.GetUserByUsername(serviceToRemove.Username)
 	if gotUserErr != nil {
-		err := map[string]interface{}{"MotorcyclesAddServiceRoute": gotUserErr.Error()}
+		err := map[string]interface{}{"MotorcyclesDeleteServiceRoute": gotUserErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusNotFound)
 		return
 	}
 
 	if !gotUser.IsLoggedIn {
-		err := map[string]interface{}{"MotorcyclesAddServiceRoute": errors.New("user is not logged in").Error()}
+		err := map[string]interface{}{"MotorcyclesDeleteServiceRoute": errors.New("user is not logged in").Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
 	jwtValidationErr := s.ValidateJwtToken(token, gotUser.Token)
 	if jwtValidationErr != nil {
-		err := map[string]interface{}{"MotorcyclesAddServiceRoute": jwtValidationErr.Error()}
+		err := map[string]interface{}{"MotorcyclesDeleteServiceRoute": jwtValidationErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
-	userUpdated, err := s.businessLogic.AddServiceToMotorcycle(
-		serviceToAdd.Username,
-		serviceToAdd.LicensePlate,
-		serviceToAdd.Service.ToBusinessLogicModel(),
+	userUpdated, err := s.businessLogic.RemoveServiceFromMotorcycle(
+		serviceToRemove.Username,
+		serviceToRemove.LicensePlate,
+		serviceToRemove.ServiceId,
 	)
 
 	if err != nil {
-		respErr := map[string]interface{}{"MotorcyclesAddServiceRoute": err.Error()}
+		respErr := map[string]interface{}{"MotorcyclesDeleteServiceRoute": err.Error()}
 		s.HandleRouteError(writer, respErr, http.StatusInternalServerError)
 		return
 	}

@@ -57,15 +57,16 @@ type Insurance struct {
 }
 
 type Service struct {
-	Name            string        `bson:"name"`
-	LocationAddress Address       `bson:"address"`
-	ListOfDones     []ListOfDones `bson:"list_of_dones"`
-	VatPrice        float64       `bson:"vat_price"`
-	TotalPrice      float64       `bson:"total_price"`
-	Kilometers      string        `bson:"kilometers"`
-	ManpowerPrice   float64       `bson:"manpower_price"`
-	ManpowerHours   int32         `bson:"manpower_hours"`
-	Date            time.Time     `bson:"date"`
+	ID              primitive.ObjectID `bson:"id"`
+	Name            string             `bson:"name"`
+	LocationAddress Address            `bson:"address"`
+	ListOfDones     []ListOfDones      `bson:"list_of_dones"`
+	VatPrice        float64            `bson:"vat_price"`
+	TotalPrice      float64            `bson:"total_price"`
+	Kilometers      string             `bson:"kilometers"`
+	ManpowerPrice   float64            `bson:"manpower_price"`
+	ManpowerHours   int32              `bson:"manpower_hours"`
+	Date            time.Time          `bson:"date"`
 }
 
 type ListOfDones struct {

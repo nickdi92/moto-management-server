@@ -63,6 +63,10 @@ type AddServiceToMotorcycleResponse struct {
 	User       User `json:"user"`
 }
 
+type DeleteServiceResponse struct {
+	StatusCode int `json:"status_code"`
+}
+
 // ----------------------------------------------------------------------------
 // FUELS Structs
 // ----------------------------------------------------------------------------

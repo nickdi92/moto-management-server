@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"moto-management-server/server/models"
 	"net/http"
@@ -31,17 +32,16 @@ var MotorcyclesAddRoute = func(s *MotoManagementServer, writer http.ResponseWrit
 		return
 	}
 
-	jwtValidationErr := s.ValidateJwtToken(token, gotUser.Token)
-	if jwtValidationErr != nil {
-		err := map[string]interface{}{"MotorcyclesAddRoute": jwtValidationErr.Error()}
+	if !gotUser.IsLoggedIn {
+		err := map[string]interface{}{"MotorcyclesAddRoute": errors.New("user is not logged in").Error()}
 		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
-	_, userErr := s.businessLogic.GetUserByUsername(motorBiker.Username)
-	if userErr != nil {
-		err := map[string]interface{}{"MotorcyclesAddRoute": userErr.Error()}
-		s.HandleRouteError(writer, err, http.StatusInternalServerError)
+	jwtValidationErr := s.ValidateJwtToken(token, gotUser.Token)
+	if jwtValidationErr != nil {
+		err := map[string]interface{}{"MotorcyclesAddRoute": jwtValidationErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 

@@ -69,6 +69,7 @@ func (s Service) ToBusinessLogicModel() models2.Service {
 	manpowerPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), s.ManpowerPrice)
 	date, _ := time.Parse(time.DateOnly, s.Date)
 	return models2.Service{
+		ID:   s.ID,
 		Name: s.Name,
 		LocationAddress: models2.Address{
 			City:     s.LocationAddress.City,
@@ -100,6 +101,7 @@ func (s Service) ToServerModel(bs models.Service) Service {
 	totalPrice, _ := bs.TotalPrice.Float64()
 	manpowerPrice, _ := bs.ManpowerPrice.Float64()
 	return Service{
+		ID:   bs.ID,
 		Name: bs.Name,
 		LocationAddress: Address{
 			City:     bs.LocationAddress.City,

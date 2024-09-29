@@ -215,6 +215,7 @@ func fromMongoServiceToBlService(mongoServices []models2.Service) []models.Servi
 		totalPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), s.TotalPrice)
 		manpowerPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), s.ManpowerPrice)
 		blServices = append(blServices, models.Service{
+			ID:   s.ID.Hex(),
 			Name: s.Name,
 			LocationAddress: models.Address{
 				City:     s.LocationAddress.City,

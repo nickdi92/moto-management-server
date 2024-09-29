@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"moto-management-server/server/models"
 	"net/http"
@@ -27,6 +28,12 @@ var GetUserRoute = func(s *MotoManagementServer, writer http.ResponseWriter, req
 	if gotUserErr != nil {
 		err := map[string]interface{}{"GetUserRoute": gotUserErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusNotFound)
+		return
+	}
+
+	if !gotUser.IsLoggedIn {
+		err := map[string]interface{}{"GetUserRoute": fmt.Errorf("user is not logged in")}
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 

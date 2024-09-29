@@ -34,6 +34,7 @@ func fromUserRegisterRequestToBlUser(registerUser models.CreateUserRequest) mode
 func fromServerMotorBikerToBlUSer(biker models.AddMotorcycleRequest) models2.User {
 	blMotorBiker := models2.User{
 		Username:    biker.Username,
+		IsLoggedIn:  true,
 		Motorcycles: fromServerMotorcyclesToBlMotorcycles(biker.Motorcycles),
 	}
 

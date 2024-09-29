@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"moto-management-server/server/models"
 	"net/http"
@@ -28,6 +29,12 @@ var MotorcyclesDeleteRoute = func(s *MotoManagementServer, writer http.ResponseW
 	if gotUserErr != nil {
 		err := map[string]interface{}{"MotorcyclesDeleteRoute": gotUserErr.Error()}
 		s.HandleRouteError(writer, err, http.StatusNotFound)
+		return
+	}
+
+	if !gotUser.IsLoggedIn {
+		err := map[string]interface{}{"MotorcyclesDeleteRoute": errors.New("user is not logged in").Error()}
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 

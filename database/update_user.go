@@ -43,6 +43,12 @@ func (m *MotoManagementMongoClient) UpdateUser(userToUpdate models.User) (models
 					userToUpdate.Motorcycles[index].FuelSupplies[fuelIndex].ID = primitive.NewObjectID()
 				}
 			}
+
+			for serviceIndex, service := range mt.Service {
+				if service.ID.IsZero() {
+					userToUpdate.Motorcycles[index].Service[serviceIndex].ID = primitive.NewObjectID()
+				}
+			}
 		}
 		updateSingleFields["motorcycles"] = userToUpdate.Motorcycles
 	}
