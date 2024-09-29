@@ -1,6 +1,7 @@
 package models
 
 import (
+	"moto-management-server/business_logic/models"
 	models2 "moto-management-server/business_logic/models"
 	"time"
 
@@ -50,5 +51,68 @@ func (f FuelSupplies) ToServerModel(blModel models2.FuelSupplies) FuelSupplies {
 			TotalLitres:        blModel.PetrolStation.TotalLitres,
 			TotalPrice:         totalPrice,
 		},
+	}
+}
+
+func (s Service) ToBusinessLogicModel() models2.Service {
+	listOfDones := make([]models2.ListOfDones, 0)
+	for _, stuff := range s.ListOfDones {
+		stuffPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), stuff.Price)
+		listOfDones = append(listOfDones, models2.ListOfDones{
+			Name:  stuff.Name,
+			Note:  stuff.Note,
+			Price: stuffPrice,
+		})
+	}
+	vatPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), s.VatPrice)
+	totalPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), s.TotalPrice)
+	manpowerPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), s.ManpowerPrice)
+	date, _ := time.Parse(time.DateOnly, s.Date)
+	return models2.Service{
+		Name: s.Name,
+		LocationAddress: models2.Address{
+			City:     s.LocationAddress.City,
+			Street:   s.LocationAddress.Street,
+			ZipCode:  s.LocationAddress.ZipCode,
+			Province: s.LocationAddress.ZipCode,
+			State:    s.LocationAddress.State,
+		},
+		ListOfDones:   listOfDones,
+		VatPrice:      vatPrice,
+		TotalPrice:    totalPrice,
+		ManpowerPrice: manpowerPrice,
+		ManpowerHours: s.ManpowerHours,
+		Date:          date,
+	}
+}
+
+func (s Service) ToServerModel(bs models.Service) Service {
+	listOfDones := make([]ListOfDones, 0)
+	for _, stuff := range bs.ListOfDones {
+		stuffPrice, _ := stuff.Price.Float64()
+		listOfDones = append(listOfDones, ListOfDones{
+			Name:  stuff.Name,
+			Note:  stuff.Note,
+			Price: stuffPrice,
+		})
+	}
+	vatPrice, _ := bs.VatPrice.Float64()
+	totalPrice, _ := bs.TotalPrice.Float64()
+	manpowerPrice, _ := bs.ManpowerPrice.Float64()
+	return Service{
+		Name: bs.Name,
+		LocationAddress: Address{
+			City:     bs.LocationAddress.City,
+			Street:   bs.LocationAddress.Street,
+			ZipCode:  bs.LocationAddress.ZipCode,
+			Province: bs.LocationAddress.ZipCode,
+			State:    bs.LocationAddress.State,
+		},
+		ListOfDones:   listOfDones,
+		VatPrice:      vatPrice,
+		TotalPrice:    totalPrice,
+		ManpowerPrice: manpowerPrice,
+		ManpowerHours: s.ManpowerHours,
+		Date:          bs.Date.String(),
 	}
 }

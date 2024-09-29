@@ -17,23 +17,19 @@ func fromUserRegisterRequestToBlUser(registerUser models.CreateUserRequest) mode
 		Name:       registerUser.Name,
 		Lastname:   registerUser.Lastname,
 		IsLoggedIn: false,
+		Address: models2.Address{
+			City:     registerUser.Address.City,
+			Street:   registerUser.Address.Street,
+			ZipCode:  registerUser.Address.ZipCode,
+			Province: registerUser.Address.Province,
+			State:    registerUser.Address.State,
+		},
+		UserRegistry: models2.Registry{
+			FiscalCode: registerUser.UserRegistry.FiscalCode,
+			DOB:        registerUser.UserRegistry.DOB,
+		},
 	}
 }
-
-func fromBlUserToUserRegisterRequest(blUser models2.User) models.CreateUserRequest {
-	return models.CreateUserRequest{
-		Username:   blUser.Username,
-		Password:   blUser.Password,
-		Email:      blUser.Email,
-		Name:       blUser.Name,
-		Lastname:   blUser.Lastname,
-		Token:      blUser.Token,
-		ExpireAt:   blUser.ExpireAt,
-		IsLoggedIn: false,
-	}
-}
-
-/********/
 
 func fromServerMotorBikerToBlUSer(biker models.AddMotorcycleRequest) models2.User {
 	blMotorBiker := models2.User{
@@ -90,7 +86,7 @@ func fromBlMotoToServerMoto(mt models2.Motorcycle) models.Motorcycle {
 			},
 		},
 		FuelSupplies:   fromBlFuelSuppliesToServerFuelSupplies(mt.FuelSupplies),
-		Service:        []models.Service{},
+		Service:        fromBlServicesToServerServices(mt.Service),
 		Inspection:     []models.Inspection{},
 		AccidentReport: []models.AccidentReport{},
 		CreatedAt:      mt.CreatedAt,
@@ -110,6 +106,16 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 			money, _ := money2.NewAmountFromFloat64(currency, mt.MotorcycleDataSheet.Insurance.PriceMoney)
 			expireAt, _ := time.Parse(time.DateOnly, mt.MotorcycleDataSheet.Insurance.ExpireAt)
 
+			fuels := make([]models2.FuelSupplies, 0)
+			for _, f := range mt.FuelSupplies {
+				fuels = append(fuels, f.ToBusinessLogicModel())
+			}
+
+			services := make([]models2.Service, 0)
+			for _, s := range mt.Service {
+				services = append(services, s.ToBusinessLogicModel())
+			}
+
 			blMt := models2.Motorcycle{
 				LicensePlate: mt.LicensePlate,
 				MotorcycleDataSheet: models2.MotorcycleDataSheet{
@@ -127,8 +133,8 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 						ExpireAt:   &expireAt,
 					},
 				},
-				FuelSupplies:   []models2.FuelSupplies{},
-				Service:        []models2.Service{},
+				FuelSupplies:   fuels,
+				Service:        services,
 				Inspection:     []models2.Inspection{},
 				AccidentReport: []models2.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
@@ -145,6 +151,7 @@ func fromServerMotorcyclesToBlMotorcycles(serverMotorcycles []models.Motorcycle)
 	}
 	return nil
 }
+
 func fromBlUserToServerUser(blUser models2.User) models.User {
 	return models.User{
 		ID:          blUser.ID,
@@ -157,9 +164,19 @@ func fromBlUserToServerUser(blUser models2.User) models.User {
 		ExpireAt:    blUser.ExpireAt,
 		IsLoggedIn:  blUser.IsLoggedIn,
 		Motorcycles: fromBlMotorcyclesToServerMotorcycles(blUser.Motorcycles),
+		Address: models.Address{
+			City:     blUser.Address.City,
+			Street:   blUser.Address.Street,
+			ZipCode:  blUser.Address.ZipCode,
+			Province: blUser.Address.Province,
+			State:    blUser.Address.State,
+		},
+		UserRegistry: models.Registry{
+			FiscalCode: blUser.UserRegistry.FiscalCode,
+			DOB:        blUser.UserRegistry.DOB,
+		},
 	}
 }
-
 
 func fromBlFuelSuppliesToServerFuelSupplies(blFuel []models2.FuelSupplies) []models.FuelSupplies {
 	serverFuels := make([]models.FuelSupplies, 0)
@@ -168,4 +185,13 @@ func fromBlFuelSuppliesToServerFuelSupplies(blFuel []models2.FuelSupplies) []mod
 		serverFuels = append(serverFuels, sf.ToServerModel(bf))
 	}
 	return serverFuels
+}
+
+func fromBlServicesToServerServices(blServices []models2.Service) []models.Service {
+	serverServices := make([]models.Service, 0)
+	for _, bs := range blServices {
+		var serverService models.Service
+		serverServices = append(serverServices, serverService.ToServerModel(bs))
+	}
+	return serverServices
 }

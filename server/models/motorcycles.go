@@ -44,6 +44,21 @@ type Insurance struct {
 }
 
 type Service struct {
+	Name            string        `json:"name"`
+	LocationAddress Address       `json:"address"`
+	ListOfDones     []ListOfDones `json:"list_of_dones"`
+	VatPrice        float64       `json:"vat_price"`
+	TotalPrice      float64       `json:"total_price"`
+	Kilometers      string        `json:"kilometers"`
+	ManpowerPrice   float64       `json:"manpower_price"`
+	ManpowerHours   int32         `json:"manpower_hours"`
+	Date            string        `json:"date"`
+}
+
+type ListOfDones struct {
+	Name  string  `json:"name"`
+	Note  string  `json:"note"`
+	Price float64 `json:"price"`
 }
 
 type Inspection struct{}

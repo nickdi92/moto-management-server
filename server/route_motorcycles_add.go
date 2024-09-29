@@ -24,6 +24,20 @@ var MotorcyclesAddRoute = func(s *MotoManagementServer, writer http.ResponseWrit
 		return
 	}
 
+	gotUser, gotUserErr := s.businessLogic.GetUserByUsername(motorBiker.Username)
+	if gotUserErr != nil {
+		err := map[string]interface{}{"MotorcyclesAddRoute": gotUserErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusNotFound)
+		return
+	}
+
+	jwtValidationErr := s.ValidateJwtToken(token, gotUser.Token)
+	if jwtValidationErr != nil {
+		err := map[string]interface{}{"MotorcyclesAddRoute": jwtValidationErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
+		return
+	}
+
 	_, userErr := s.businessLogic.GetUserByUsername(motorBiker.Username)
 	if userErr != nil {
 		err := map[string]interface{}{"MotorcyclesAddRoute": userErr.Error()}

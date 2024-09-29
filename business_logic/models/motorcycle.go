@@ -61,7 +61,23 @@ type Insurance struct {
 	ExpireAt   *time.Time   `json:"expire_at"`
 }
 
-type Service struct{}
+type Service struct {
+	Name            string        `json:"name"`
+	LocationAddress Address       `json:"address"`
+	ListOfDones     []ListOfDones `json:"list_of_dones"`
+	VatPrice        money.Amount  `json:"vat_price"`
+	TotalPrice      money.Amount  `json:"total_price"`
+	Kilometers      string        `json:"kilometers"`
+	ManpowerPrice   money.Amount  `json:"manpower_price"`
+	ManpowerHours   int32         `json:"manpower_hours"`
+	Date            time.Time     `json:"date"`
+}
+
+type ListOfDones struct {
+	Name  string       `json:"name"`
+	Note  string       `json:"note"`
+	Price money.Amount `json:"price"`
+}
 
 type Inspection struct{}
 

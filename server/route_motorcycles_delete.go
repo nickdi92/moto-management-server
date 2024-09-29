@@ -24,6 +24,20 @@ var MotorcyclesDeleteRoute = func(s *MotoManagementServer, writer http.ResponseW
 		return
 	}
 
+	gotUser, gotUserErr := s.businessLogic.GetUserByUsername(deleteMotorcycle.Username)
+	if gotUserErr != nil {
+		err := map[string]interface{}{"MotorcyclesDeleteRoute": gotUserErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusNotFound)
+		return
+	}
+
+	jwtValidationErr := s.ValidateJwtToken(token, gotUser.Token)
+	if jwtValidationErr != nil {
+		err := map[string]interface{}{"MotorcyclesDeleteRoute": jwtValidationErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
+		return
+	}
+
 	isDeleted, deleteErr := s.businessLogic.DeleteMotorbike(deleteMotorcycle.Username, deleteMotorcycle.LicensePlate)
 	if deleteErr != nil {
 		err := map[string]interface{}{"motorcycleDeleteRoute": deleteErr.Error()}

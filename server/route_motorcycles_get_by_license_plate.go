@@ -24,6 +24,20 @@ var MotorcyclesGetByLicensePlateRoute = func(s *MotoManagementServer, writer htt
 		return
 	}
 
+	gotUser, gotUserErr := s.businessLogic.GetUserByUsername(getMotoInfo.Username)
+	if gotUserErr != nil {
+		err := map[string]interface{}{"MotorcyclesGetByLicensePlateRoute": gotUserErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusNotFound)
+		return
+	}
+
+	jwtValidationErr := s.ValidateJwtToken(token, gotUser.Token)
+	if jwtValidationErr != nil {
+		err := map[string]interface{}{"MotorcyclesGetByLicensePlateRoute": jwtValidationErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
+		return
+	}
+
 	motorcycle, getMotoErr := s.businessLogic.GetMotorcycleByLicensePlate(getMotoInfo.Username, getMotoInfo.LicensePlate)
 	if getMotoErr != nil {
 		err := map[string]interface{}{"MotorcyclesGetByLicensePlateRoute": getMotoErr.Error()}

@@ -3,8 +3,8 @@ package business_logic
 import (
 	"moto-management-server/business_logic/models"
 	models2 "moto-management-server/database/models"
+	"time"
 
-	"github.com/govalues/money"
 	money2 "github.com/govalues/money"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -27,11 +27,23 @@ func fromMongoUserToBlUser(mongoUser models2.User) models.User {
 		UpdatedAt:   &mongoUser.UpdatedAt,
 		IsLoggedIn:  mongoUser.IsLoggedIn,
 		Motorcycles: fromMongoMotorcyclesToBlMotorcycles(mongoUser.Motorcycles),
+		Address: models.Address{
+			City:     mongoUser.Address.City,
+			Street:   mongoUser.Address.Street,
+			ZipCode:  mongoUser.Address.ZipCode,
+			Province: mongoUser.Address.Province,
+			State:    mongoUser.Address.State,
+		},
+		UserRegistry: models.Registry{
+			FiscalCode: mongoUser.UserRegistry.FiscalCode,
+			DOB:        mongoUser.UserRegistry.DOB.String(),
+		},
 	}
 	return blUser
 }
 
 func fromBlUserToMongoUser(blUser models.User) models2.User {
+	dob, _ := time.Parse(time.DateOnly, blUser.UserRegistry.DOB)
 	mongoUser := models2.User{
 		Username:    blUser.Username,
 		Name:        blUser.Name,
@@ -41,6 +53,17 @@ func fromBlUserToMongoUser(blUser models.User) models2.User {
 		Token:       blUser.Token,
 		IsLoggedIn:  blUser.IsLoggedIn,
 		Motorcycles: fromBlMotorcyclesToMongoMotorcycles(blUser.Motorcycles),
+		Address: models2.Address{
+			City:     blUser.Address.City,
+			Street:   blUser.Address.Street,
+			ZipCode:  blUser.Address.ZipCode,
+			Province: blUser.Address.Province,
+			State:    blUser.Address.State,
+		},
+		UserRegistry: models2.Registry{
+			FiscalCode: blUser.UserRegistry.FiscalCode,
+			DOB:        dob,
+		},
 	}
 
 	if blUser.ExpireAt != nil {
@@ -78,7 +101,7 @@ func fromBlMotorcyclesToMongoMotorcycles(blMotorcycles []models.Motorcycle) []mo
 					},
 				},
 				FuelSupplies:   fromBlFuelsSuppliesToMongoFuelsSupplies(mt.FuelSupplies),
-				Service:        []models2.Service{},
+				Service:        fromBlServicesToMongoServices(mt.Service),
 				Inspection:     []models2.Inspection{},
 				AccidentReport: []models2.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
@@ -122,7 +145,7 @@ func fromMongoMotorcyclesToBlMotorcycles(mongoMotorcycles []models2.Motorcycle) 
 					},
 				},
 				FuelSupplies:   fromMongoFuelSuppliesToBlFuelSupplies(mt.FuelSupplies),
-				Service:        []models.Service{},
+				Service:        fromMongoServiceToBlService(mt.Service),
 				Inspection:     []models.Inspection{},
 				AccidentReport: []models.AccidentReport{},
 				CreatedAt:      mt.CreatedAt,
@@ -146,8 +169,8 @@ func fromBlFuelsSuppliesToMongoFuelsSupplies(blFuels []models.FuelSupplies) []mo
 func fromMongoFuelSuppliesToBlFuelSupplies(mongoFuels []models2.FuelSupplies) []models.FuelSupplies {
 	blFuels := make([]models.FuelSupplies, 0)
 	for _, mongoFuel := range mongoFuels {
-		pricePerLitres, _ := money.NewAmountFromFloat64(money.EUR.Code(), mongoFuel.PetrolStation.FuelPricePerLitres)
-		totalPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), mongoFuel.PetrolStation.TotalPrice)
+		pricePerLitres, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), mongoFuel.PetrolStation.FuelPricePerLitres)
+		totalPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), mongoFuel.PetrolStation.TotalPrice)
 		blFuels = append(blFuels, models.FuelSupplies{
 			ID: mongoFuel.ID.Hex(),
 			PetrolStation: models.PetrolStation{
@@ -166,4 +189,48 @@ func fromMongoFuelSuppliesToBlFuelSupplies(mongoFuels []models2.FuelSupplies) []
 		})
 	}
 	return blFuels
+}
+
+func fromBlServicesToMongoServices(blServices []models.Service) []models2.Service {
+	mongoServices := make([]models2.Service, 0)
+	for _, f := range blServices {
+		mongoServices = append(mongoServices, f.ToMongoService())
+	}
+	return mongoServices
+}
+
+func fromMongoServiceToBlService(mongoServices []models2.Service) []models.Service {
+	blServices := make([]models.Service, 0)
+	for _, s := range mongoServices {
+		listOfDones := make([]models.ListOfDones, 0)
+		for _, stuff := range s.ListOfDones {
+			stuffPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), stuff.Price)
+			listOfDones = append(listOfDones, models.ListOfDones{
+				Name:  stuff.Name,
+				Note:  stuff.Note,
+				Price: stuffPrice,
+			})
+		}
+		vatPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), s.VatPrice)
+		totalPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), s.TotalPrice)
+		manpowerPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), s.ManpowerPrice)
+		blServices = append(blServices, models.Service{
+			Name: s.Name,
+			LocationAddress: models.Address{
+				City:     s.LocationAddress.City,
+				Street:   s.LocationAddress.Street,
+				ZipCode:  s.LocationAddress.ZipCode,
+				Province: s.LocationAddress.ZipCode,
+				State:    s.LocationAddress.State,
+			},
+			ListOfDones:   listOfDones,
+			VatPrice:      vatPrice,
+			TotalPrice:    totalPrice,
+			ManpowerPrice: manpowerPrice,
+			ManpowerHours: s.ManpowerHours,
+			Date:          s.Date,
+		})
+	}
+
+	return blServices
 }

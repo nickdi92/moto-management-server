@@ -2,20 +2,9 @@ package models
 
 import "time"
 
-type DeleteMotorcycleResponse struct {
-	StatusCode int  `json:"status_code"`
-	IsDeleted  bool `json:"is_deleted"`
-}
-
-type AddFuelToMotorcycleResponse struct {
-	StatusCode int        `json:"status_code"`
-	Motorcycle Motorcycle `json:"motorcycle"`
-}
-
-type GetMotorcycleByLicensePlateResponse struct {
-	StatusCode int        `json:"status_code"`
-	Motorcycle Motorcycle `json:"motorcycle"`
-}
+// ----------------------------------------------------------------------------
+// USERS Structs
+// ----------------------------------------------------------------------------
 
 type TokenResponse struct {
 	StatusCode int        `json:"status_code"`
@@ -29,11 +18,6 @@ type CreateUserResponse struct {
 	ExpireAt   *time.Time `json:"expire_at"`
 }
 
-type AddMotorcycleResponse struct {
-	StatusCode  int          `json:"status_code"`
-	Motorcycles []Motorcycle `json:"motorcycles" validate:"required"`
-}
-
 type UserLoginResponse struct {
 	StatusCode int        `json:"status_code"`
 	Token      string     `json:"token"`
@@ -42,6 +26,48 @@ type UserLoginResponse struct {
 }
 
 type GetUserResponse struct {
+	StatusCode int  `json:"status_code"`
+	User       User `json:"user"`
+}
+
+type UpdateUserResponse struct {
+	StatusCode int  `json:"status_code"`
+	User       User `json:"user"`
+}
+
+// ----------------------------------------------------------------------------
+// MOTORCYCLES Structs
+// ----------------------------------------------------------------------------
+
+type GetMotorcycleByLicensePlateResponse struct {
+	StatusCode int        `json:"status_code"`
+	Motorcycle Motorcycle `json:"motorcycle"`
+}
+
+type DeleteMotorcycleResponse struct {
+	StatusCode int  `json:"status_code"`
+	IsDeleted  bool `json:"is_deleted"`
+}
+
+type AddMotorcycleResponse struct {
+	StatusCode  int          `json:"status_code"`
+	Motorcycles []Motorcycle `json:"motorcycles" validate:"required"`
+}
+
+// ----------------------------------------------------------------------------
+// SERVICES Structs
+// ----------------------------------------------------------------------------
+
+type AddServiceToMotorcycleResponse struct {
+	StatusCode int  `json:"status_code"`
+	User       User `json:"user"`
+}
+
+// ----------------------------------------------------------------------------
+// FUELS Structs
+// ----------------------------------------------------------------------------
+
+type AddFuelToMotorcycleResponse struct {
 	StatusCode int  `json:"status_code"`
 	User       User `json:"user"`
 }

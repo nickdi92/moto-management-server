@@ -23,16 +23,23 @@ var GetUserRoute = func(s *MotoManagementServer, writer http.ResponseWriter, req
 		return
 	}
 
-	user, getUserErr := s.businessLogic.GetUserByUsername(getUser.Username)
-	if getUserErr != nil {
-		err := map[string]interface{}{"getUserRoute": getUserErr.Error()}
-		s.HandleRouteError(writer, err, http.StatusInternalServerError)
+	gotUser, gotUserErr := s.businessLogic.GetUserByUsername(getUser.Username)
+	if gotUserErr != nil {
+		err := map[string]interface{}{"GetUserRoute": gotUserErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusNotFound)
+		return
+	}
+
+	jwtValidationErr := s.ValidateJwtToken(token, gotUser.Token)
+	if jwtValidationErr != nil {
+		err := map[string]interface{}{"GetUserRoute": jwtValidationErr.Error()}
+		s.HandleRouteError(writer, err, http.StatusUnauthorized)
 		return
 	}
 
 	resp := models.GetUserResponse{
 		StatusCode: http.StatusOK,
-		User:       fromBlUserToServerUser(user),
+		User:       fromBlUserToServerUser(gotUser),
 	}
 	s.HandleResponse(writer, resp)
 }

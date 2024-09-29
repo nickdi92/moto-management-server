@@ -5,7 +5,7 @@ import (
 	"moto-management-server/business_logic/models"
 )
 
-func (b *BusinessLogic) AddFuelToMotorcycle(username string, licensePlate string, fuel models.FuelSupplies) (models.User, error) {
+func (b *BusinessLogic) AddServiceToMotorcycle(username string, licensePlate string, service models.Service) (models.User, error) {
 	if username == "" {
 		return models.User{}, errors.New("no username provided")
 	}
@@ -19,24 +19,22 @@ func (b *BusinessLogic) AddFuelToMotorcycle(username string, licensePlate string
 		return models.User{}, getMotorcycleToUpdateErr
 	}
 
-	fuelSupplies := make([]models.FuelSupplies, 0)
-	fuelSupplies = append(fuelSupplies, fuel)
+	services := make([]models.Service, 0)
+	services = append(services, service)
+	canUpdate := false
 
-	if motorcycleToUpdate.FuelSupplies != nil {
-		fuelSupplies = append(fuelSupplies, motorcycleToUpdate.FuelSupplies...)
+	if motorcycleToUpdate.Service != nil {
+		services = append(services, motorcycleToUpdate.Service...)
 	}
 
-	motorcycleToUpdate.FuelSupplies = fuelSupplies
-
-	canUpdate := false
+	motorcycleToUpdate.Service = services
 	for index, mt := range blUSer.Motorcycles {
 		if mt.ID == motorcycleToUpdate.ID {
-			blUSer.Motorcycles[index].FuelSupplies = motorcycleToUpdate.FuelSupplies
+			blUSer.Motorcycles[index].Service = motorcycleToUpdate.Service
 			canUpdate = true
 			break
 		}
 	}
-
 	if canUpdate {
 		updatedUser, updateErr := b.UpdateUser(blUSer)
 		if updateErr != nil {
