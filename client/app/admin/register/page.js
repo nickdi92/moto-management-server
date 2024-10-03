@@ -8,7 +8,7 @@ import NotificationError from "@/app/components/notifications/error";
 export default function Register() {
     const [isLoading, setIsLoading] = useState(false);
     const [userCreated, setUserCreated] = useState(false);
-    const [notificationMessage, setNotifcationMessage] = useState("");
+    const [notificationMessage, setNotificationMessage] = useState("");
     const [userCreationHasErrors, setUserCreationHasErrors] = useState(false);
 
     async function onSubmit(event) {
@@ -20,7 +20,7 @@ export default function Register() {
           for (const pair of formData.entries()) {
             bodyRaw[pair[0]] = pair[1];
           }
-          const response = await fetch("http://localhost:8080/admin/register", {
+          const response = await fetch("http://localhost:8080/admin/user/create", {
               method: "POST",
               body: JSON.stringify(bodyRaw),
               headers: {
@@ -34,16 +34,16 @@ export default function Register() {
             setCookie("bearer_token_expiration", data.expire_at);
             setUserCreated(true);
             setUserCreationHasErrors(false);
-            setNotifcationMessage("Registrazione avvenuta con sucesso !");
+            setNotificationMessage("Registrazione avvenuta con sucesso !");
           } else {
             console.error("Error on creating new User: ", data.registerRouteErr);
             setUserCreationHasErrors(true);
-            setNotifcationMessage("Error on creating new User: " + data.registerRouteErr);
+            setNotificationMessage("Error on creating new User: " + data.registerRouteErr);
           }
         } catch (error) {
           console.error("Error on creating new User: ", error);
           setUserCreationHasErrors(true);
-          setNotifcationMessage("Error on creating new User: " + error)
+          setNotificationMessage("Error on creating new User: " + error)
         } finally {
           setIsLoading(false);
         }
