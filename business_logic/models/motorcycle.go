@@ -75,6 +75,7 @@ type Service struct {
 }
 
 type ListOfDones struct {
+	ID    string       `json:"id"`
 	Name  string       `json:"name"`
 	Note  string       `json:"note"`
 	Price money.Amount `json:"price"`

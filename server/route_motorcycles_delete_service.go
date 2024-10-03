@@ -45,7 +45,7 @@ var MotorcyclesDeleteServiceRoute = func(s *MotoManagementServer, writer http.Re
 		return
 	}
 
-	userUpdated, err := s.businessLogic.RemoveServiceFromMotorcycle(
+	_, err := s.businessLogic.RemoveServiceFromMotorcycle(
 		serviceToRemove.Username,
 		serviceToRemove.LicensePlate,
 		serviceToRemove.ServiceId,
@@ -57,8 +57,7 @@ var MotorcyclesDeleteServiceRoute = func(s *MotoManagementServer, writer http.Re
 		return
 	}
 
-	s.HandleResponse(writer, models.AddServiceToMotorcycleResponse{
+	s.HandleResponse(writer, models.DeleteServiceResponse{
 		StatusCode: http.StatusOK,
-		User:       fromBlUserToServerUser(userUpdated),
 	})
 }

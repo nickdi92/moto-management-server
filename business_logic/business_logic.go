@@ -21,6 +21,7 @@ type BusinessLogicInterface interface {
 	// Services
 	AddServiceToMotorcycle(username string, licensePlate string, service models.Service) (models.User, error)
 	RemoveServiceFromMotorcycle(username string, licensePlate string, serviceId string) (models.User, error)
+	UpdateServiceToMotorcycle(username string, licensePlate string, service models.Service) (models.User, error)
 }
 
 func (b *BusinessLogic) NewBusinessLogic() *BusinessLogic {

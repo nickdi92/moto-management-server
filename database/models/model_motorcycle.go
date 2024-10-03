@@ -70,9 +70,10 @@ type Service struct {
 }
 
 type ListOfDones struct {
-	Name  string  `bson:"name"`
-	Note  string  `bson:"note"`
-	Price float64 `bson:"price"`
+	ID    primitive.ObjectID `bson:"id"`
+	Name  string             `bson:"name"`
+	Note  string             `bson:"note"`
+	Price float64            `bson:"price"`
 }
 type Inspection struct{}
 

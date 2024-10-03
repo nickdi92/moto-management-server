@@ -67,6 +67,11 @@ type DeleteServiceResponse struct {
 	StatusCode int `json:"status_code"`
 }
 
+type UpdateServiceToMotorcycleResponse struct {
+	StatusCode int  `json:"status_code"`
+	User       User `json:"user"`
+}
+
 // ----------------------------------------------------------------------------
 // FUELS Structs
 // ----------------------------------------------------------------------------

@@ -13,7 +13,7 @@ func (f FuelSupplies) ToBusinessLogicModel() models2.FuelSupplies {
 	totalPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), f.PetrolStation.TotalPrice)
 	createdAt, _ := time.Parse(time.DateOnly, f.CreatedAt)
 
-	modl := models2.FuelSupplies{
+	model := models2.FuelSupplies{
 		ID: f.ID,
 		PetrolStation: models2.PetrolStation{
 			Name:               f.PetrolStation.Name,
@@ -29,7 +29,7 @@ func (f FuelSupplies) ToBusinessLogicModel() models2.FuelSupplies {
 		FullFuel:  f.FullFuel,
 		CreatedAt: &createdAt,
 	}
-	return modl
+	return model
 }
 
 func (f FuelSupplies) ToServerModel(blModel models2.FuelSupplies) FuelSupplies {
@@ -59,6 +59,7 @@ func (s Service) ToBusinessLogicModel() models2.Service {
 	for _, stuff := range s.ListOfDones {
 		stuffPrice, _ := money.NewAmountFromFloat64(money.EUR.Code(), stuff.Price)
 		listOfDones = append(listOfDones, models2.ListOfDones{
+			ID:    stuff.ID,
 			Name:  stuff.Name,
 			Note:  stuff.Note,
 			Price: stuffPrice,
@@ -75,9 +76,10 @@ func (s Service) ToBusinessLogicModel() models2.Service {
 			City:     s.LocationAddress.City,
 			Street:   s.LocationAddress.Street,
 			ZipCode:  s.LocationAddress.ZipCode,
-			Province: s.LocationAddress.ZipCode,
+			Province: s.LocationAddress.Province,
 			State:    s.LocationAddress.State,
 		},
+		Kilometers:    s.Kilometers,
 		ListOfDones:   listOfDones,
 		VatPrice:      vatPrice,
 		TotalPrice:    totalPrice,
@@ -92,6 +94,7 @@ func (s Service) ToServerModel(bs models.Service) Service {
 	for _, stuff := range bs.ListOfDones {
 		stuffPrice, _ := stuff.Price.Float64()
 		listOfDones = append(listOfDones, ListOfDones{
+			ID:    stuff.ID,
 			Name:  stuff.Name,
 			Note:  stuff.Note,
 			Price: stuffPrice,
@@ -107,9 +110,10 @@ func (s Service) ToServerModel(bs models.Service) Service {
 			City:     bs.LocationAddress.City,
 			Street:   bs.LocationAddress.Street,
 			ZipCode:  bs.LocationAddress.ZipCode,
-			Province: bs.LocationAddress.ZipCode,
+			Province: bs.LocationAddress.Province,
 			State:    bs.LocationAddress.State,
 		},
+		Kilometers:    bs.Kilometers,
 		ListOfDones:   listOfDones,
 		VatPrice:      vatPrice,
 		TotalPrice:    totalPrice,

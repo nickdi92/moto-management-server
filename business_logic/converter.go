@@ -206,6 +206,7 @@ func fromMongoServiceToBlService(mongoServices []models2.Service) []models.Servi
 		for _, stuff := range s.ListOfDones {
 			stuffPrice, _ := money2.NewAmountFromFloat64(money2.EUR.Code(), stuff.Price)
 			listOfDones = append(listOfDones, models.ListOfDones{
+				ID:    stuff.ID.Hex(),
 				Name:  stuff.Name,
 				Note:  stuff.Note,
 				Price: stuffPrice,
@@ -221,9 +222,10 @@ func fromMongoServiceToBlService(mongoServices []models2.Service) []models.Servi
 				City:     s.LocationAddress.City,
 				Street:   s.LocationAddress.Street,
 				ZipCode:  s.LocationAddress.ZipCode,
-				Province: s.LocationAddress.ZipCode,
+				Province: s.LocationAddress.Province,
 				State:    s.LocationAddress.State,
 			},
+			Kilometers:    s.Kilometers,
 			ListOfDones:   listOfDones,
 			VatPrice:      vatPrice,
 			TotalPrice:    totalPrice,
