@@ -4,12 +4,15 @@ import React, {useState, Suspense} from "react";
 import { setCookie, getCookie } from "cookies-next";
 import NotificationSuccess from "@/app/components/notifications/success";
 import NotificationError from "@/app/components/notifications/error";
+import { useRouter } from 'next/navigation';
+
 
 export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [userLoggedInd, setUserIsLoggedIn] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState("");
     const [userCreationHasErrors, setUserCreationHasErrors] = useState(false);
+    const router = useRouter()
 
     async function onSubmit(event) {
         event.preventDefault();
@@ -56,6 +59,7 @@ export default function Login() {
             setUserIsLoggedIn(true);
             setUserCreationHasErrors(false);
             setNotificationMessage("Benvenuto " + bodyRaw["username"])
+            router.push("/admin/dashboard")
           } else {
             console.error("Error on login User: ", data.loginRouteErr);
             setUserCreationHasErrors(true);
