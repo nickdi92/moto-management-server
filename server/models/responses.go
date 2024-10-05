@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 // ----------------------------------------------------------------------------
 // USERS Structs
@@ -19,10 +21,8 @@ type CreateUserResponse struct {
 }
 
 type UserLoginResponse struct {
-	StatusCode int        `json:"status_code"`
-	Token      string     `json:"token"`
-	ExpireAt   *time.Time `json:"expire_at"`
-	IsLoggedIn bool       `json:"is_logged_in"`
+	StatusCode int  `json:"status_code"`
+	User       User `json:"user"`
 }
 
 type GetUserResponse struct {

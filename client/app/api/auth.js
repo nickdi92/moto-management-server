@@ -1,7 +1,7 @@
 import {getCookie, setCookie} from "cookies-next";
 
 export function GetAuthenticationHeader() {
-    return   "Bearer " + GetBearerToken();
+    return "Bearer " + GetBearerToken();
 }
 
 export function GetBearerToken() {
@@ -10,4 +10,7 @@ export function GetBearerToken() {
 
 export function UpdateBearerToken(newToken) {
     setCookie("bearer_token", newToken)
+}
+export function UpdateBearerTokenExpiration(expiration) {
+    setCookie("bearer_token_expire_at", expiration)
 }
