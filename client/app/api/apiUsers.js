@@ -66,7 +66,7 @@ export async function GetUserInfo(bodyRaw) {
     
     const userInfo = await call.json();
     if (userInfo.status_code === 200 && userInfo.user) {
-        UpdateUserDataToLocalStorage(userInfo);
+        UpdateUserDataToLocalStorage(userInfo.user);
     }
     
     return userInfo;
