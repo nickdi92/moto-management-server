@@ -54,6 +54,11 @@ type AddMotorcycleResponse struct {
 	Motorcycles []Motorcycle `json:"motorcycles" validate:"required"`
 }
 
+type MotorcyclesIndexResponse struct {
+	StatusCode  int          `json:"status_code"`
+	Motorcycles []Motorcycle `json:"motorcycles" validate:"required"`
+}
+
 // ----------------------------------------------------------------------------
 // SERVICES Structs
 // ----------------------------------------------------------------------------

@@ -59,6 +59,10 @@ type GetMotorcycleByLicensePlateRequest struct {
 	LicensePlate string `json:"license_plate" validate:"required"`
 }
 
+type MotorcyclesIndexRequest struct {
+	Username string `json:"username" validate:"required"`
+}
+
 // ----------------------------------------------------------------------------
 // FUEL Structs
 // ----------------------------------------------------------------------------

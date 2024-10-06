@@ -1,5 +1,5 @@
 import {GetAuthenticationHeader, UpdateBearerToken, UpdateBearerTokenExpiration} from "@/app/api/auth";
-import {IsTokenExpired} from "@/app/api/token";
+import {IsUserLoggedIn, SetIsUserLoggedIn, UpdateUserDataToLocalStorage, SetUsername} from "@/app/helpers/userHelper";
 
 export async function CreateUser(bodyRaw) {
     const response = await fetch("http://localhost:8080/admin/user/create", {
@@ -38,6 +38,7 @@ export async function LoginUser(bodyRaw) {
     const loginResponse = await response.json()
     if (loginResponse.hasOwnProperty("user") && loginResponse.user) {
         SetIsUserLoggedIn(loginResponse.user)
+        SetUsername(bodyRaw["username"]);
     }
     return loginResponse;
 }
@@ -53,15 +54,20 @@ export async function RefreshUserToken(bodyRaw) {
     return await cookie.json();
 }
 
-export function IsUserLoggedIn() {
-    let userData = localStorage.getItem("user_data");
-    let isUserLoggedIn = Boolean(localStorage.getItem("is_user_logged_in"));
+export async function GetUserInfo(bodyRaw) {
+    const call = await fetch("http://localhost:8080/admin/user/get", {
+        method: "POST",
+        body: JSON.stringify(bodyRaw),
+        headers: {
+            "Content-type": "application/json",
+            "Authorization": GetAuthenticationHeader()
+        }
+    });
     
-    return userData && !IsTokenExpired(userData.token) && isUserLoggedIn;
-}
-
-export function SetIsUserLoggedIn(userData) {
-    localStorage.setItem("user_data", JSON.stringify(userData));
-    localStorage.setItem("is_user_logged_in", userData?.is_logged_in);
-    UpdateBearerToken(userData.token);
+    const userInfo = await call.json();
+    if (userInfo.status_code === 200 && userInfo.user) {
+        UpdateUserDataToLocalStorage(userInfo);
+    }
+    
+    return userInfo;
 }

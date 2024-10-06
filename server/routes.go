@@ -29,6 +29,7 @@ func (s *MotoManagementServer) RegisterRoutes() {
 	 *				MOTORCYCLE ROUTES				  *
 	 *------------------------------------------------*/
 
+	privateRoutes["motorcycle/index"] = MotorcyclesIndexRoute
 	privateRoutes["motorcycle/add"] = MotorcyclesAddRoute
 	privateRoutes["motorcycle/delete"] = MotorcyclesDeleteRoute
 	privateRoutes["motorcycle/getByLicensePlate"] = MotorcyclesGetByLicensePlateRoute
