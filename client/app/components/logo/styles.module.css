@@ -1,0 +1,14 @@
+.logo h1 {
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-weight: bold;
+}
+.logoGuest h1 {
+    color: black;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 40px;
+}

@@ -1,10 +1,21 @@
-import {getCookie} from "cookies-next";
 import {GetAuthenticationHeader, UpdateBearerToken, UpdateBearerTokenExpiration} from "@/app/api/auth";
-import {log} from "next/dist/server/typescript/utils";
 import {IsTokenExpired} from "@/app/api/token";
 
-export async function CreateUser() {
-
+export async function CreateUser(bodyRaw) {
+    const response = await fetch("http://localhost:8080/admin/user/create", {
+        method: "POST",
+        body: JSON.stringify(bodyRaw),
+        headers: {
+            "Content-type": "application/json"
+        }
+    });
+    
+    const data = await response.json();
+    if (data.hasOwnProperty("token")) {
+        UpdateBearerToken(data.token);
+        UpdateBearerTokenExpiration(data.expire_at)
+    }
+    return data;
 }
 
 export async function LoginUser(bodyRaw) {

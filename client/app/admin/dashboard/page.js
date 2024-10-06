@@ -4,6 +4,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import {IsUserLoggedIn} from "@/app/api/apiUsers";
 import {useRouter} from "next/navigation";
+import Logo from "@/app/components/logo";
 
 const user = {
   name: 'Tom Cook',
@@ -12,11 +13,11 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+  { name: 'Dashboard', href: '/admin/dashboard', current: true },
+  { name: 'Motorcycles', href: '/admin/motorcycles/index', current: false },
+  { name: 'Fuels', href: '/admin/motorcycles/fuels/index', current: false },
+  { name: 'Services', href: '/admin/motorcycles/service/index', current: false },
+  { name: 'Accidents', href: '/admin/motorcycles/accidents/index', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
@@ -34,25 +35,13 @@ export default function Dashboard() {
   } else {
     return (
         <>
-          {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
           <div className="min-h-full">
             <Disclosure as="nav" className="bg-gray-800">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img
-                          alt="Your Company"
-                          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                          className="h-8 w-8"
-                      />
+                      {<Logo context="dashboard" /> }
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -179,7 +168,29 @@ export default function Dashboard() {
               </div>
             </header>
             <main>
-              <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{/* Your content */}</div>
+              <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                
+                
+                <div
+                    className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                  <a href="#">
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy
+                      technology acquisitions 2021</h5>
+                  </a>
+                  <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise
+                    technology acquisitions of 2021 so far, in reverse chronological order.</p>
+                  <a href="#"
+                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Read more
+                    <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
+                  </a>
+                </div>
+              
+              </div>
             </main>
           </div>
         </>

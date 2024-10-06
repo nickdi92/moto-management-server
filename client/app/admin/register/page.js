@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { setCookie } from "cookies-next";
 import NotificationSuccess from "@/app/components/notifications/success";
 import NotificationError from "@/app/components/notifications/error";
+import Logo from "@/app/components/logo";
+import {CreateUser} from "@/app/api/apiUsers";
 
 export default function Register() {
     const [isLoading, setIsLoading] = useState(false);
@@ -20,18 +22,9 @@ export default function Register() {
           for (const pair of formData.entries()) {
             bodyRaw[pair[0]] = pair[1];
           }
-          const response = await fetch("http://localhost:8080/admin/user/create", {
-              method: "POST",
-              body: JSON.stringify(bodyRaw),
-              headers: {
-                "Content-type": "application/json"
-              }
-          });
-  
-          const data = await response.json();
+         const data = CreateUser(bodyRaw);
+          
           if (data.token) {
-            setCookie("bearer_token", data.token);
-            setCookie("bearer_token_expiration", data.expire_at);
             setUserCreated(true);
             setUserCreationHasErrors(false);
             setNotificationMessage("Registrazione avvenuta con sucesso !");
@@ -55,11 +48,7 @@ export default function Register() {
     
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          alt="Your Company"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          className="mx-auto h-10 w-auto"
-        />
+        {<Logo context="guest" />}
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Create New Account
         </h2>
