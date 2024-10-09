@@ -29,7 +29,7 @@ export function IsCurrentRoute(route) {
 
 export function GetUserNavigationItems() {
     return [
-        {name: 'Your Profile', href: '#'},
+        {name: 'Your Profile', href: '/admin/user/'},
         {name: 'Settings', href: '#'},
         {name: 'Sign out', href: '#'},
     ]

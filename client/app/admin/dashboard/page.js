@@ -11,14 +11,14 @@ export default function Dashboard() {
         router.push("/admin/login");
     } else {
         let userInfo = GetUserDataFromLocalStorage();
-        let motorcyclesNode = userInfo.motorcycles;
-        let motorcyclesCounter = motorcyclesNode.length;
+        let motorcyclesNode = userInfo?.motorcycles;
+        let motorcyclesCounter = motorcyclesNode && motorcyclesNode.length > 0 ? motorcyclesNode.length : 0;
         return (
             <>
-                <div className="min-h-full">
+                <div className="min-h-screen">
                     {<DashboardHeader title={"Dashboard"}/>}
-                    <main>
-                        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <main className="bg-white shadow min-h-screen">
+                        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 ">
                             <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                                 <a href="#">
                                     <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">

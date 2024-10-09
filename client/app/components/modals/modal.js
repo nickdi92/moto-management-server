@@ -1,8 +1,7 @@
 'use client'
 
-import {useState, useTransition} from 'react'
+import {useState} from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 export default function Modal({
     title,
     description,
@@ -11,7 +10,6 @@ export default function Modal({
 }) {
     const [open, setOpen] = useState(true);
     const [showLoader, setShowLoader] = useState(isLoading);
-    const [showSuccessIcon, setShowSuccessIcon] = useState(isSuccess);
     
     return (
         <Dialog open={open} onClose={setOpen} className="relative z-10">

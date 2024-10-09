@@ -7,6 +7,7 @@ import {GetNavigationMenuItems, classNames, IsCurrentRoute, GetUserNavigationIte
 import {GetUserInfo} from "@/app/api/apiUsers";
 import {GetUserDataFromLocalStorage, GetUserFullName, GetUsername} from "@/app/helpers/userHelper";
 import {useEffect, useState} from "react";
+import {UserCircleIcon} from "@heroicons/react/24/solid";
 
 let user = {};
 let userInfo = GetUserDataFromLocalStorage() ?? await GetUserInfo({username: GetUsername()})
@@ -14,8 +15,6 @@ if (userInfo || userInfo.status_code === 200) {
     user = {
         name: GetUserFullName(),
         email: userInfo.email,
-        imageUrl:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     }
 }
 
@@ -80,7 +79,7 @@ export default function DashboardHeader({
                                                 <span className="sr-only">Open user menu</span>
                                                 
                                                 <div className="text-base font-medium leading-none text-white mr-2">{user.name}</div>
-                                                <img alt="" src={user.imageUrl} className="h-8 w-8 rounded-full"/>
+                                                <UserCircleIcon />
                                             </MenuButton>
                                         </div>
                                         <MenuItems
