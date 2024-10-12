@@ -58,6 +58,15 @@ func (m *MotoManagementMongoClient) UpdateUser(userToUpdate models.User) (models
 		updateSingleFields["motorcycles"] = userToUpdate.Motorcycles
 	}
 
+	if userToUpdate.Address.City != "" || userToUpdate.Address.State != "" || userToUpdate.Address.Street != "" ||
+		userToUpdate.Address.Province != "" || userToUpdate.Address.ZipCode != "" {
+		updateSingleFields["address"] = userToUpdate.Address
+	}
+
+	if userToUpdate.UserRegistry.FiscalCode != "" || !userToUpdate.UserRegistry.DOB.IsZero() {
+		updateSingleFields["registry"] = userToUpdate.UserRegistry
+	}
+
 	updateSingleFields["updated_at"] = time.Now()
 	updateSingleFields["is_logged_in"] = userToUpdate.IsLoggedIn
 

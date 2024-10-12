@@ -17,12 +17,12 @@ func (m *MotoManagementMongoClient) CreateNewUser(userToCreate models.User) (mod
 	userToCreate.CreatedAt = time.Now()
 	userToCreate.UpdatedAt = time.Now()
 
-	uusersCollections := m.mongoClient.
+	usersCollections := m.mongoClient.
 		Database(os.Getenv("MONGODB_DATABASE")).
 		Collection(os.Getenv("MONGODB_USERS_COLLECTIONS"))
 
 	userToCreate.ID = primitive.NewObjectID()
-	_, err := uusersCollections.InsertOne(ctx, userToCreate)
+	_, err := usersCollections.InsertOne(ctx, userToCreate)
 
 	if err != nil {
 		return mongoUser, err

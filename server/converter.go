@@ -16,7 +16,7 @@ func fromUserRegisterRequestToBlUser(registerUser models.CreateUserRequest) mode
 		Email:      registerUser.Email,
 		Name:       registerUser.Name,
 		Lastname:   registerUser.Lastname,
-		IsLoggedIn: false,
+		IsLoggedIn: registerUser.IsLoggedIn,
 		Address: models2.Address{
 			City:     registerUser.Address.City,
 			Street:   registerUser.Address.Street,

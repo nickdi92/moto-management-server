@@ -45,6 +45,7 @@ var UserUpdateRoute = func(s *MotoManagementServer, writer http.ResponseWriter, 
 		return
 	}
 
+	userUpdateRequest.CreateUserRequest.IsLoggedIn = gotUser.IsLoggedIn
 	updatedUser, updateErr := s.businessLogic.UpdateUser(fromUserRegisterRequestToBlUser(userUpdateRequest.CreateUserRequest))
 	if updateErr != nil {
 		err := map[string]interface{}{"UserUpdateRoute": updateErr.Error()}

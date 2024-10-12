@@ -71,3 +71,23 @@ export async function GetUserInfo(bodyRaw) {
     
     return userInfo;
 }
+
+export async function UpdateUser(bodyRaw) {
+    let body = {};
+    body["update_user"] = bodyRaw;
+    const call = await fetch("http://localhost:8080/admin/user/update", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-type": "application/json",
+            "Authorization": GetAuthenticationHeader()
+        }
+    });
+    
+    const userInfo = await call.json();
+    if (userInfo.status_code === 200 && userInfo.user) {
+        UpdateUserDataToLocalStorage(userInfo.user);
+    }
+    
+    return userInfo;
+}

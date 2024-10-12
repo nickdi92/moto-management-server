@@ -1,28 +1,21 @@
 'use client'
 
 import React, {useState} from "react";
-import NotificationSuccess from "@/app/components/notifications/success";
-import NotificationError from "@/app/components/notifications/error";
 import { useRouter } from 'next/navigation';
 import {LoginUser} from "@/app/api/apiUsers";
 import {GetUserFullName} from "@/app/helpers/userHelper";
-import Modal from "@/app/components/modals/modal";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Logo from "@/app/components/logo";
+import MotoLoader from "@/app/components/loader";
 
 export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
-    const [userLoggedIn, setUserIsLoggedIn] = useState(false);
-    const [notificationMessage, setNotificationMessage] = useState("");
-    const [userCreationHasErrors, setUserCreationHasErrors] = useState(false);
-    const [modalTitle, setModalTitle] = useState("");
-    const [modalDescription, setModalDescription] = useState("");
     const router = useRouter()
     
     async function onSubmit(event) {
         event.preventDefault();
         setIsLoading(true);
-        setModalTitle("Sto effettuando il login");
-        setModalDescription("Login corso, per favore attendere ...");
         try {
             const formData = new FormData(event.target);
             let bodyRaw = {};
@@ -32,27 +25,19 @@ export default function Login() {
             const loginUser = await LoginUser(bodyRaw);
             
             if (loginUser.hasOwnProperty("user") && loginUser.user) {
-                setUserIsLoggedIn(true);
-                setUserCreationHasErrors(false);
-                setNotificationMessage("Benvenuto " + GetUserFullName());
-                setModalTitle("Login avvenuto con successo");
-                setModalDescription("Hai correttamente effettuato il login alla piattaforma. Verrai reindirizzato a breve.")
+                toast.success("Login avvenuto con successo. Benvenuto " + GetUserFullName(), {
+                    autoClose: 1500
+                });
                 setTimeout(function () {
                     router.push("/admin/dashboard");
                 }, 1500)
             } else {
-                setModalTitle("Errore durante il login.")
-                setModalDescription("Si è verificato un errore durante il login. Error code: " + loginUser.status_code);
+                toast.error("Error on login User. Status code: " + loginUser.status_code)
                 console.error("Error on login User. Status code: ", loginUser.status_code);
-                setUserCreationHasErrors(true);
-                setNotificationMessage("Error on login User. Status code: " + loginUser.status_code)
             }
         } catch (error) {
-            setModalTitle("Errore durante il login.")
-            setModalDescription("Si è verificato un errore durante il login. Error: " + error);
+            toast.error("Error on login User: " + error)
             console.error("Error on login User: ", error);
-            setUserCreationHasErrors(true);
-            setNotificationMessage("Error on login User: " + error)
         } finally {
             setIsLoading(false);
         }
@@ -68,9 +53,8 @@ export default function Login() {
                 </h2>
             </div>
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                { userLoggedIn ? <NotificationSuccess  message={notificationMessage} /> : "" }
-                { userCreationHasErrors ? <NotificationError message={notificationMessage} /> : "" }
-                <form action="#" method="POST" className="space-y-6" onSubmit={onSubmit}>
+                <form action="#" method="POST" className="space-y-6 relative" onSubmit={onSubmit}>
+                    {isLoading ? <MotoLoader /> : ""}
                     <div>
                         <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
                             Username
@@ -125,10 +109,7 @@ export default function Login() {
                     </div>
                 </form>
             </div>
-            {isLoading ? <Modal
-                title={modalTitle}
-                description={modalDescription}
-                isLoading={isLoading}/> : ""}
+            <ToastContainer />
         </div>
     )
 }
